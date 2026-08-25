@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.UserSettingsMapper">
+
+    <resultMap id="UserSettingsResultMap" type="openflash_core.entity.UserSettings">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="theme" property="theme"/>
+        <result column="sound_enabled" property="soundEnabled" javaType="java.lang.Boolean"/>
+        <result column="last_exported_at" property="lastExportedAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="language" property="language"/>
+    </resultMap>
+
+    <select id="findByUserId" resultMap="UserSettingsResultMap">
+        SELECT id, user_id, theme, sound_enabled, last_exported_at, updated_at, language
+        FROM pw_user_settings
+        WHERE user_id = #{userId}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_user_settings (user_id, theme, sound_enabled, last_exported_at, language)
+        VALUES (#{userId}, #{theme}, #{soundEnabled}, #{lastExportedAt}, #{language})
+    </insert>
+
+    <update id="update">
+        UPDATE pw_user_settings
+        SET theme            = #{theme},
+            sound_enabled    = #{soundEnabled},
+            last_exported_at = #{lastExportedAt},
+            language         = #{language}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteByUserId">
+        DELETE FROM pw_user_settings WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

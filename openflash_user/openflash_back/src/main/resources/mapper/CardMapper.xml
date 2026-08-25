@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.CardMapper">
+
+    <resultMap id="CardResultMap" type="openflash_core.entity.Card">
+        <id column="id" property="id"/>
+        <result column="deck_id" property="deckId"/>
+        <result column="side_a" property="sideA"/>
+        <result column="side_b" property="sideB"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <sql id="cardStateFilter">
+        <if test="state != null and state == 'new'">
+            and (select count(1) from pw_card_progress where card_id = c.id and user_id = #{userId} and state = 'new' and mastered_at is null) = 2
+        </if>
+        <if test="state != null and state == 'mastered'">
+            and (select count(distinct case when mastered_at is not null then direction end) from pw_card_progress where card_id = c.id and user_id = #{userId}) = 2
+        </if>
+        <if test="state != null and state == 'graduated'">
+            and (select count(distinct case when state = 'graduated' then direction end) from pw_card_progress where card_id = c.id and user_id = #{userId}) = 2
+        </if>
+        <if test="state != null and state == 'learning'">
+            and (select count(1) from pw_card_progress where card_id = c.id and user_id = #{userId} and state = 'new') &lt; 2
+            and (select count(distinct case when mastered_at is not null then direction end) from pw_card_progress where card_id = c.id and user_id = #{userId}) &lt; 2
+            and (select count(distinct case when state = 'graduated' then direction end) from pw_card_progress where card_id = c.id and user_id = #{userId}) &lt; 2
+        </if>
+    </sql>
+
+    <select id="findByDeckId" resultMap="CardResultMap">
+        select id, deck_id, side_a, side_b, created_at, updated_at, deleted
+        from pw_card
+        where deck_id = #{deckId}
+          and deleted = 0
+        <if test="keyword != null and keyword != ''">
+            and (
+                lower(side_a) like concat('%', lower(#{keyword}), '%')
+                or lower(side_b) like concat('%', lower(#{keyword}), '%')
+            )
+        </if>
+        order by created_at asc, id asc
+    </select>
+
+    <select id="findPageByDeckId" resultMap="CardResultMap">
+        select c.id, c.deck_id, c.side_a, c.side_b, c.created_at, c.updated_at, c.deleted
+        from pw_card c
+        where c.deck_id = #{deckId}
+          and c.deleted = 0
+        <if test="keyword != null and keyword != ''">
+            and (
+                lower(c.side_a) like concat('%', lower(#{keyword}), '%')
+                or lower(c.side_b) like concat('%', lower(#{keyword}), '%')
+            )
+        </if>
+        <include refid="cardStateFilter"/>
+        <choose>
+            <when test="sort == 'created_asc'">
+                order by c.created_at asc, c.id asc
+            </when>
+            <otherwise>
+                order by c.created_at desc, c.id desc
+            </otherwise>
+        </choose>
+        limit #{limit} offset #{offset}
+    </select>
+
+    <select id="countByDeckId" resultType="long">
+        select count(1)
+        from pw_card c
+        where c.deck_id = #{deckId}
+          and c.deleted = 0
+        <if test="keyword != null and keyword != ''">
+            and (
+                lower(c.side_a) like concat('%', lower(#{keyword}), '%')
+                or lower(c.side_b) like concat('%', lower(#{keyword}), '%')
+            )
+        </if>
+        <include refid="cardStateFilter"/>
+    </select>
+
+    <select id="selectLearningStats" resultType="openflash_core.entity.DeckLearningStats">
+        select
+            total,
+            mastered,
+            today_completed_new,
+            today_completed_review,
+            pending_new,
+            pending_review,
+            pending_new + pending_review as pending_total
+        from (
+            select
+                total,
+                mastered,
+                today_completed_new,
+                today_completed_review,
+                least(greatest(#{newCardsLimit} - today_completed_new, 0), new_count) as pending_new,
+                pending_review
+            from (
+                select
+                    count(1) as total,
+                    coalesce(sum(case when card_state = 'new' then 1 else 0 end), 0) as new_count,
+                    coalesce(sum(case when mastered_ready = 1 then 1 else 0 end), 0) as mastered,
+                    coalesce(sum(case when first_learned_date = #{today} then 1 else 0 end), 0) as today_completed_new,
+                    coalesce(sum(case when first_learned_date &lt; #{today} and reviewed_today = 1 then 1 else 0 end), 0) as today_completed_review,
+                    coalesce(sum(case when review_due = 1 or new_direction_pending = 1 then 1 else 0 end), 0) as pending_review
+                from (
+                    select
+                        c.id,
+                        case
+                            when count(cp.id) &gt; 0
+                             and count(distinct case when cp.mastered_at is not null then cp.direction end) = 2
+                                then 'mastered'
+                            when count(cp.id) = 0
+                              or sum(case when cp.state = 'new' then 1 else 0 end) = count(cp.id)
+                                then 'new'
+                            else 'learning'
+                        end as card_state,
+                        case
+                            when count(cp.id) &gt; 0
+                             and count(distinct case when cp.mastered_at is not null then cp.direction end) = 2
+                                then 1
+                            else 0
+                        end as mastered_ready,
+                        min(cp.first_learned_date) as first_learned_date,
+                        max(case
+                            when cp.last_review_date = #{today}
+                                then 1
+                            else 0
+                        end) as reviewed_today,
+                        max(case
+                            when cp.state not in ('new', 'mastered', 'graduated')
+                             and cp.last_review_date is not null
+                             and cp.next_review_date is not null
+                             and cp.next_review_date &lt;= #{today}
+                                then 1
+                            else 0
+                        end) as review_due,
+                        case
+                            when sum(case when cp.state = 'new' then 1 else 0 end) &gt; 0
+                             and sum(case when cp.state not in ('new', 'mastered', 'graduated') then 1 else 0 end) &gt; 0
+                                then 1
+                            else 0
+                        end as new_direction_pending
+                    from pw_card c
+                    left join pw_card_progress cp
+                      on cp.card_id = c.id
+                     and cp.user_id = #{userId}
+                    where c.deck_id = #{deckId}
+                      and c.deleted = 0
+                    group by c.id
+                ) card_state_rows
+            ) aggregate_rows
+        ) pending_rows
+    </select>
+
+    <select id="selectTopReviewCards" resultType="openflash_core.entity.TopReviewCard">
+        select
+            c.id,
+            c.side_a,
+            c.side_b,
+            coalesce(sum(cp.reps), 0) as reps
+        from pw_card c
+        left join pw_card_progress cp
+          on cp.card_id = c.id
+         and cp.user_id = #{userId}
+        where c.deck_id = #{deckId}
+          and c.deleted = 0
+        group by c.id, c.side_a, c.side_b, c.created_at
+        having coalesce(sum(cp.reps), 0) &gt; 0
+        order by reps desc, c.created_at asc, c.id asc
+        limit #{limit}
+    </select>
+
+    <select id="findDeduplicationCandidates" resultMap="CardResultMap">
+        select id, deck_id, side_a, side_b
+        from pw_card
+        where deck_id = #{deckId}
+          and deleted = 0
+        <if test="excludingCardId != null">
+          and id != #{excludingCardId}
+        </if>
+    </select>
+
+    <select id="findById" resultMap="CardResultMap">
+        select id, deck_id, side_a, side_b, created_at, updated_at, deleted
+        from pw_card
+        where id = #{id}
+          and deleted = 0
+        limit 1
+    </select>
+
+    <select id="findByIds" resultMap="CardResultMap">
+        select id, deck_id, side_a, side_b, created_at, updated_at, deleted
+        from pw_card
+        where deleted = 0
+          and id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by id asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into pw_card (deck_id, side_a, side_b)
+        values (#{deckId}, #{sideA}, #{sideB})
+    </insert>
+
+    <update id="updateCard">
+        update pw_card
+        set side_a = #{sideA},
+            side_b = #{sideB}
+        where id = #{id}
+          and deleted = 0
+    </update>
+
+    <update id="updateDeckId">
+        update pw_card
+        set deck_id = #{targetDeckId}
+        where id = #{id}
+          and deck_id = #{sourceDeckId}
+          and deleted = 0
+    </update>
+
+    <update id="updateSideAIfEmpty">
+        update pw_card
+        set side_a = #{value}
+        where id = #{id}
+          and deleted = 0
+          and (side_a is null or side_a = '')
+    </update>
+
+    <update id="updateSideBIfEmpty">
+        update pw_card
+        set side_b = #{value}
+        where id = #{id}
+          and deleted = 0
+          and (side_b is null or side_b = '')
+    </update>
+
+    <delete id="deleteById">
+        delete from pw_card
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByDeckId">
+        delete from pw_card
+        where deck_id = #{deckId}
+    </delete>
+
+    <select id="findAllDistinctTexts" resultType="string">
+        select trim(side_a)
+        from pw_card
+        where deleted = 0
+          and side_a is not null
+          and trim(side_a) != ''
+        union
+        select trim(side_b)
+        from pw_card
+        where deleted = 0
+          and side_b is not null
+          and trim(side_b) != ''
+    </select>
+
+    <select id="findAllActiveIds" resultType="java.lang.Long">
+        select id from pw_card where deleted = 0
+    </select>
+
+</mapper>

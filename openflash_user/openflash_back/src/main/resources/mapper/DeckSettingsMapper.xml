@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.DeckSettingsMapper">
+
+    <resultMap id="DeckSettingsResultMap" type="openflash_core.entity.DeckSettings">
+        <id column="id" property="id"/>
+        <result column="deck_id" property="deckId"/>
+        <result column="new_cards_per_day" property="newCardsPerDay"/>
+        <result column="target_retention" property="targetRetention"/>
+        <result column="review_load_profile" property="reviewLoadProfile"/>
+        <result column="duplicate_side_a_enabled" property="duplicateSideAEnabled" javaType="java.lang.Boolean"/>
+        <result column="duplicate_side_b_enabled" property="duplicateSideBEnabled" javaType="java.lang.Boolean"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findByDeckId" resultMap="DeckSettingsResultMap">
+        SELECT id, deck_id, new_cards_per_day, target_retention, review_load_profile,
+               duplicate_side_a_enabled, duplicate_side_b_enabled,
+               updated_at
+        FROM pw_deck_settings
+        WHERE deck_id = #{deckId}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_deck_settings (
+            deck_id, new_cards_per_day, target_retention, review_load_profile,
+            duplicate_side_a_enabled, duplicate_side_b_enabled,
+            updated_at
+        ) VALUES (
+            #{deckId}, #{newCardsPerDay}, #{targetRetention}, #{reviewLoadProfile},
+            #{duplicateSideAEnabled}, #{duplicateSideBEnabled},
+            #{updatedAt}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE pw_deck_settings
+        SET new_cards_per_day        = #{newCardsPerDay},
+            target_retention         = #{targetRetention},
+            review_load_profile      = #{reviewLoadProfile},
+            duplicate_side_a_enabled = #{duplicateSideAEnabled},
+            duplicate_side_b_enabled = #{duplicateSideBEnabled},
+            updated_at               = #{updatedAt}
+        WHERE deck_id = #{deckId}
+    </update>
+
+    <delete id="deleteByDeckId">
+        DELETE FROM pw_deck_settings WHERE deck_id = #{deckId}
+    </delete>
+
+</mapper>

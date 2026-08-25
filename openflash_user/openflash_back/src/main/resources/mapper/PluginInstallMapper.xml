@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.PluginInstallMapper">
+
+    <select id="findPluginIdsByDeck" resultType="String">
+        select plugin_id from pw_plugin_install
+        where user_id = #{userId} and deck_id = #{deckId}
+    </select>
+
+    <insert id="insert">
+        insert into pw_plugin_install (user_id, deck_id, plugin_id, installed_at)
+        values (#{userId}, #{deckId}, #{pluginId}, NOW())
+        on conflict (user_id, deck_id, plugin_id) do nothing
+    </insert>
+
+    <delete id="delete">
+        delete from pw_plugin_install
+        where user_id = #{userId} and deck_id = #{deckId} and plugin_id = #{pluginId}
+    </delete>
+
+    <delete id="deleteByDeckId">
+        delete from pw_plugin_install where deck_id = #{deckId}
+    </delete>
+
+    <delete id="deleteByUserId">
+        delete from pw_plugin_install where user_id = #{userId}
+    </delete>
+
+    <select id="existsByDeckAndPlugin" resultType="boolean">
+        select exists(
+            select 1 from pw_plugin_install
+            where deck_id = #{deckId} and plugin_id = #{pluginId}
+        )
+    </select>
+
+</mapper>

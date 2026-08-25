@@ -1,0 +1,16 @@
+app:
+  tts:
+    service-url: http://127.0.0.1:8888/synthesize
+    piper-service-url: http://127.0.0.1:8889/synthesize
+    voice: default
+    speed: 0.95
+    piper-speed: 0.70
+    accent: american
+    engine-version: tts-synthesis-v5
+    piper-engine-version: piper-1.6.0-libritts-r-medium-speaker-0
+    max-concurrent-requests: 1
+    request-queue-capacity: 1
+    max-concurrent-requests-per-user: 2
+    connect-timeout-millis: 5000
+    request-timeout-millis: 30000
+    capacity-wait-timeout-millis: 250

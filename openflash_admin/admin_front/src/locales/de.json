@@ -1,0 +1,247 @@
+{
+  "app": {
+    "title": "OpenFlash-Verwaltung"
+  },
+  "auth": {
+    "title": "Administrator-Anmeldung",
+    "description": "Benutzerzugriffe und CLIs auf diesem Rechner verwalten.",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "loggingIn": "Anmeldung läuft...",
+    "logout": "Abmelden"
+  },
+  "nav": {
+    "menu": "Verwaltung",
+    "ariaLabel": "Admin-Navigation",
+    "overview": "Übersicht",
+    "users": "Benutzer",
+    "platformAi": "Plattform-KI",
+    "cli": "CLI"
+  },
+  "pages": {
+    "overview": {
+      "title": "Systemübersicht",
+      "description": "Aktuellen Status der Konten und CLIs anzeigen.",
+      "actions": "Häufige Aktionen"
+    },
+    "users": {
+      "title": "Benutzerverwaltung",
+      "description": "Kontorollen und Zugriffe auf von der Plattform bereitgestellte KI verwalten.",
+      "searchLabel": "Benutzer suchen",
+      "searchPlaceholder": "Benutzername oder Anzeigename",
+      "loading": "Benutzer werden geladen...",
+      "loadError": "Benutzer konnten nicht geladen werden.",
+      "loadErrorDescription": "Admin-Dienst prüfen und erneut versuchen.",
+      "retry": "Neu laden",
+      "emptyTitle": "Keine Benutzer gefunden",
+      "emptyDescription": "Einen anderen Benutzernamen oder Anzeigenamen versuchen.",
+      "roleLabel": "Kontorolle",
+      "roleAria": "Rolle von {{username}} auf {{role}} setzen",
+      "cliAccess": "Plattform-KI-Zugriff",
+      "cliAccessSummary": "{{allowed}} / {{total}} erlaubt",
+      "manageCliAccess": "Verwalten",
+      "cliDialogTitle": "CLI-Zugriff für {{user}} verwalten",
+      "closeCliDialog": "Fertig",
+      "cliAria": "{{cli}}-Zugriff für {{username}} umschalten",
+      "cliNames": {
+        "codex-cli": "Codex CLI",
+        "codex": "Codex CLI"
+      },
+      "cliRuntime": {
+        "AVAILABLE": "Verfügbar",
+        "NOT_INSTALLED": "Nicht installiert",
+        "NOT_LOGGED_IN": "Nicht angemeldet",
+        "DISABLED": "Deaktiviert",
+        "ERROR": "Verbindung fehlgeschlagen"
+      },
+      "saving": "Wird gespeichert...",
+      "updateError": "Zugriff konnte nicht aktualisiert werden. Der vorherige Wert wurde wiederhergestellt. Erneut versuchen.",
+      "lastAdminError": "Im System muss mindestens ein Administrator verbleiben.",
+      "activeStatus": "Aktiv",
+      "bannedStatus": "Gesperrt",
+      "banUser": "Konto sperren",
+      "unbanUser": "Sperrung aufheben",
+      "deleteUser": "Konto löschen",
+      "deleteConfirmTitle": "Konto dauerhaft löschen?",
+      "deleteConfirmBody": "{{user}} und alle zugehörigen Daten werden dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "deleteCancel": "Abbrechen",
+      "deleteConfirmAction": "Dauerhaft löschen",
+      "deleting": "Wird gelöscht...",
+      "accountActionError": "Die Kontoaktion ist fehlgeschlagen. Der vorherige Zustand wurde wiederhergestellt. Erneut versuchen.",
+      "userServiceUnavailableError": "Der Benutzerdienst läuft nicht. Starten Sie ihn, bevor Sie ein Konto dauerhaft löschen.",
+      "selfAccountActionDisabled": "Das aktuell angemeldete Konto kann nicht gesperrt oder gelöscht werden.",
+      "selfAccountMutationError": "Das aktuell angemeldete Konto kann nicht gesperrt oder gelöscht werden.",
+      "platformProvided": "Von der Plattform bereitgestellt",
+      "runtimeUnavailable": "KI-Laufzeit nicht verfügbar",
+      "runtimeUnavailableDescription": "Benutzer bleiben sichtbar, aber Plattform-KI-Zugriffe können erst nach dem Start der Laufzeit geändert werden."
+    },
+    "platformAi": {
+      "title": "Plattform-KI",
+      "description": "Gemeinsame KI-Verbindungen, feste Modelle und Benutzerzugriffe verwalten.",
+      "apiSectionTitle": "API-Konfiguration",
+      "apiSectionDescription": "API-Verbindungen, Zugangsdaten und feste Modelle der Plattform verwalten.",
+      "loading": "Plattform-KI wird geladen...",
+      "loadError": "Plattform-KI konnte nicht geladen werden.",
+      "retry": "Neu laden",
+      "runtimeUnavailable": "KI-Laufzeit nicht verfügbar",
+      "runtimeUnavailableDescription": "Sichere Katalogmetadaten bleiben sichtbar. Laufzeitaktionen sind bis zum Start des Dienstes deaktiviert.",
+      "addConnection": "Verbindung hinzufügen",
+      "apiConnection": "Anthropic API",
+      "codexConnection": "Codex CLI",
+      "createConnection": "Verbindung erstellen",
+      "saveApiConfiguration": "AI-Konfiguration speichern",
+      "connectionType": "Verbindungstyp",
+      "baseUrl": "Basis-URL",
+      "providerName": "Anbietername",
+      "requestUrl": "Anfrage-URL (Anthropic-kompatibel)",
+      "modelName": "Modellname",
+      "sortOrder": "Sortierung",
+      "cancel": "Abbrechen",
+      "defaultDeny": "Der Zugriff auf neue Modelle ist standardmäßig auf ausgewählte Benutzer beschränkt.",
+      "enabled": "Aktiviert",
+      "disabled": "Deaktiviert",
+      "credentialConfigured": "Zugangsdaten konfiguriert",
+      "credentialMissing": "Zugangsdaten fehlen",
+      "replaceCredential": "Zugangsdaten ersetzen",
+      "apiKey": "API-Schlüssel",
+      "saveCredential": "Zugangsdaten speichern",
+      "addOffering": "Modell hinzufügen",
+      "modelKey": "Modellschlüssel",
+      "discoverModels": "Modelle suchen",
+      "discoveryUnavailable": "Die Modellsuche ist nicht verfügbar. Modellschlüssel manuell eingeben.",
+      "createOffering": "Modell erstellen",
+      "allUsers": "Alle Benutzer",
+      "selectedUsers": "Ausgewählte Benutzer",
+      "defaultAccessAria": "{{model}} für alle Benutzer erlauben",
+      "connectionEnabledAria": "{{name}} aktivieren",
+      "offeringEnabledAria": "{{model}} aktivieren",
+      "deleteConnection": "Verbindung löschen",
+      "deleteOffering": "Modell löschen",
+      "deleteConfirmTitle": "Dauerhaft löschen?",
+      "deleteConnectionConfirmBody": "Die Verbindung und ihre Modelle werden dauerhaft gelöscht.",
+      "deleteOfferingConfirmBody": "Das Modellangebot wird dauerhaft gelöscht.",
+      "deleteConfirmAction": "Dauerhaft löschen",
+      "saveError": "Die Plattform-KI-Änderung ist fehlgeschlagen. Erneut versuchen.",
+      "emptyTitle": "Keine Plattform-KI-Verbindungen",
+      "emptyDescription": "Eine Anthropic API- oder Codex CLI-Verbindung hinzufügen.",
+      "emptyApiTitle": "Keine API-Verbindungen",
+      "emptyApiDescription": "Eine Anthropic API-Verbindung hinzufügen.",
+      "runtimeStatus": "Laufzeit: {{status}}",
+      "runtime": {
+        "AVAILABLE": "Verfügbar",
+        "ERROR": "Nicht verfügbar",
+        "UNAVAILABLE": "Vorübergehend nicht verfügbar"
+      }
+    },
+    "cli": {
+      "title": "CLI-Verwaltung",
+      "description": "CLI-Dienste, Anmeldestatus und Benutzerzugriff auf diesem Rechner verwalten.",
+      "connectedTitle": "Verbundene CLIs",
+      "connectedHint": "Weitere CLIs werden nach ihrer Anbindung in dieser Liste angezeigt.",
+      "codex": {
+        "name": "Codex",
+        "description": "OpenAI Codex CLI",
+        "detailTitle": "Codex CLI",
+        "currentDescription": "Aktuell ausgewählte CLI.",
+        "current": "Aktuelle Verwaltung",
+        "globalDisabled": "Deaktiviert",
+        "loading": "Codex-Status wird geladen...",
+        "loadError": "Codex-Status konnte nicht geladen werden.",
+        "loadErrorDescription": "Admin- und Laufzeitdienste prüfen und erneut versuchen.",
+        "retry": "Neu laden",
+        "globalSwitch": "Globaler Codex-Schalter",
+        "globalSwitchDescription": "Wenn deaktiviert, können weder Benutzer noch Hintergrundaufgaben Codex aufrufen.",
+        "globalSwitchAria": "Codex global umschalten",
+        "runtimeTitle": "Laufzeitstatus",
+        "changeTiming": "Wirksamkeit der Änderung",
+        "globalDelay": "Benutzerzugriffe gelten sofort. Der globale Schalter kann bis zu {{seconds}} Sekunden benötigen.",
+        "updateError": "Der globale Schalter konnte nicht aktualisiert werden. Der vorherige Wert wurde wiederhergestellt. Erneut versuchen.",
+        "loginActionError": "Die Codex-Anmeldung ist fehlgeschlagen. Dienste prüfen und erneut versuchen.",
+        "loginTitle": "Codex-Anmeldung",
+        "loginOnlyHere": "Nur Administratoren können die CLI auf dieser Seite anmelden.",
+        "startLogin": "Bei Codex CLI anmelden",
+        "waitingTitle": "Anmeldung abschließen",
+        "deviceCode": "Gerätecode",
+        "openVerification": "Bestätigungsseite öffnen",
+        "cancelLogin": "Anmeldung abbrechen",
+        "accountTitle": "Codex-Konto",
+        "accountComplete": "Gemeinsame Anmeldung abgeschlossen",
+        "accountPrivacy": "Kontodetails und Token werden normalen Benutzern nicht angezeigt.",
+        "refreshStatus": "Status aktualisieren",
+        "logoutAccount": "Von Codex abmelden",
+        "logoutConfirmTitle": "Von Codex abmelden?",
+        "logoutConfirmBody": "Dadurch wird das gemeinsam genutzte Codex CLI-Konto auf diesem Rechner abgemeldet. Benutzer und Hintergrundaufgaben können keine neuen Codex-Anfragen starten, bis sich ein Administrator erneut anmeldet.",
+        "logoutCancel": "Abbrechen",
+        "logoutActionError": "Codex konnte nicht abgemeldet werden. Das gemeinsame Konto bleibt verfügbar. Dienste prüfen und erneut versuchen.",
+        "runtime": {
+          "AVAILABLE": {
+            "label": "Verfügbar",
+            "description": "Codex CLI ist angemeldet und für autorisierte Benutzer verfügbar."
+          },
+          "NOT_INSTALLED": {
+            "label": "Nicht installiert",
+            "description": "Codex CLI wurde auf diesem Rechner nicht erkannt."
+          },
+          "NOT_LOGGED_IN": {
+            "label": "Nicht angemeldet",
+            "description": "Die Codex CLI-Anmeldung wurde auf diesem Rechner nicht abgeschlossen."
+          },
+          "DISABLED": {
+            "label": "Deaktiviert",
+            "description": "Der Codex-Laufzeitdienst ist derzeit deaktiviert."
+          },
+          "ERROR": {
+            "label": "Verbindung fehlgeschlagen",
+            "description": "Der Codex CLI-Status ist nicht verfügbar. Dienstprotokolle prüfen und erneut versuchen."
+          }
+        },
+        "login": {
+          "IDLE": {
+            "label": "Nicht gestartet",
+            "message": "Anmeldung starten, um hier die Gerätebestätigung anzuzeigen."
+          },
+          "STARTING": {
+            "label": "Wird gestartet",
+            "message": "Ein Gerätecode für die Codex-Anmeldung wird erstellt."
+          },
+          "PENDING": {
+            "label": "Anmeldung ausstehend",
+            "message": "Bestätigungsseite öffnen und den Gerätecode unten eingeben."
+          },
+          "SUCCEEDED": {
+            "label": "Angemeldet",
+            "message": "Die gemeinsame Codex CLI-Anmeldung ist abgeschlossen."
+          },
+          "FAILED": {
+            "label": "Anmeldung fehlgeschlagen",
+            "message": "Dieser Anmeldeversuch ist fehlgeschlagen. Erneut starten."
+          },
+          "EXPIRED": {
+            "label": "Anmeldung abgelaufen",
+            "message": "Der Gerätecode ist abgelaufen. Erneut starten."
+          },
+          "CANCELED": {
+            "label": "Abgebrochen",
+            "message": "Dieser Anmeldeversuch wurde abgebrochen."
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "saved": "Gespeichert"
+  },
+  "theme": {
+    "dark": "Dunkelmodus"
+  },
+  "errors": {
+    "requiredCredentials": "Administrator-Benutzername und Passwort eingeben.",
+    "invalidCredentials": "Benutzername oder Passwort ist falsch.",
+    "loginRateLimited": "Zu viele Anmeldeversuche. Bitte später erneut versuchen.",
+    "unauthorized": "Die Sitzung ist abgelaufen. Bitte erneut anmelden.",
+    "forbidden": "Dieses Konto hat keine Administratorrechte.",
+    "generic": "Die Anfrage ist fehlgeschlagen. Admin-Dienst prüfen und erneut versuchen."
+  }
+}

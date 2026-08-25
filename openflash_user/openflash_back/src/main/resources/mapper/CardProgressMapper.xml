@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.CardProgressMapper">
+
+    <resultMap id="CardProgressResultMap" type="openflash_core.entity.CardProgress">
+        <id column="id" property="id"/>
+        <result column="card_id" property="cardId"/>
+        <result column="user_id" property="userId"/>
+        <result column="direction" property="direction"/>
+        <result column="state" property="state"/>
+        <result column="step" property="step"/>
+        <result column="stability" property="stability"/>
+        <result column="difficulty" property="difficulty"/>
+        <result column="next_review_date" property="nextReviewDate"/>
+        <result column="last_review_date" property="lastReviewDate"/>
+        <result column="reps" property="reps"/>
+        <result column="lapses" property="lapses"/>
+        <result column="last_rating" property="lastRating"/>
+        <result column="first_learned_date" property="firstLearnedDate"/>
+        <result column="mastered_at" property="masteredAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findByUserIdAndCardIdAndDirection" resultMap="CardProgressResultMap">
+        select id, card_id, user_id, direction, state, step, stability, difficulty, next_review_date, last_review_date,
+               reps, lapses, last_rating, first_learned_date, mastered_at, updated_at
+        from pw_card_progress
+        where user_id = #{userId}
+          and card_id = #{cardId}
+          and direction = #{direction}
+        limit 1
+    </select>
+
+    <select id="findByUserIdAndCardId" resultMap="CardProgressResultMap">
+        select id, card_id, user_id, direction, state, step, stability, difficulty, next_review_date, last_review_date,
+               reps, lapses, last_rating, first_learned_date, mastered_at, updated_at
+        from pw_card_progress
+        where user_id = #{userId}
+          and card_id = #{cardId}
+        order by direction asc
+    </select>
+
+    <!-- 锁定读：插入后回读用，绕过 REPEATABLE READ 快照，读最新已提交行，杜绝并发首访得到空列表。 -->
+    <select id="findByUserIdAndCardIdForUpdate" resultMap="CardProgressResultMap">
+        select id, card_id, user_id, direction, state, step, stability, difficulty, next_review_date, last_review_date,
+               reps, lapses, last_rating, first_learned_date, mastered_at, updated_at
+        from pw_card_progress
+        where user_id = #{userId}
+          and card_id = #{cardId}
+        order by direction asc
+        for update
+    </select>
+
+    <select id="findByUserIdAndCardIds" resultMap="CardProgressResultMap">
+        select id, card_id, user_id, direction, state, step, stability, difficulty, next_review_date, last_review_date,
+               reps, lapses, last_rating, first_learned_date, mastered_at, updated_at
+        from pw_card_progress
+        where user_id = #{userId}
+          and card_id in
+        <foreach collection="cardIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by card_id asc, direction asc
+    </select>
+
+    <select id="findMasteredCardIds" resultType="long">
+        select cp.card_id
+        from pw_card_progress cp
+        inner join pw_card c on c.id = cp.card_id
+        where cp.user_id = #{userId}
+          and c.deleted = 0
+        <if test="keyword != null and keyword != ''">
+            and (
+                lower(c.side_a) like concat('%', lower(#{keyword}), '%')
+                or lower(c.side_b) like concat('%', lower(#{keyword}), '%')
+            )
+        </if>
+        group by cp.card_id
+        having count(distinct case when cp.mastered_at is not null then cp.direction end) = 2
+        order by max(cp.mastered_at) desc, cp.card_id desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into pw_card_progress (
+            card_id, user_id, direction, state, step, stability, difficulty, next_review_date,
+            last_review_date, reps, lapses, last_rating, first_learned_date, mastered_at
+        ) values (
+            #{cardId}, #{userId}, #{direction}, #{state}, #{step}, #{stability}, #{difficulty}, #{nextReviewDate},
+            #{lastReviewDate}, #{reps}, #{lapses}, #{lastRating}, #{firstLearnedDate}, #{masteredAt}
+        )
+    </insert>
+
+    <update id="updateByUserIdAndCardIdAndDirection">
+        update pw_card_progress
+        set state = #{state},
+            step = #{step},
+            stability = #{stability},
+            difficulty = #{difficulty},
+            next_review_date = #{nextReviewDate},
+            last_review_date = #{lastReviewDate},
+            reps = #{reps},
+            lapses = #{lapses},
+            last_rating = #{lastRating},
+            first_learned_date = #{firstLearnedDate},
+            mastered_at = #{masteredAt}
+        where user_id = #{userId}
+          and card_id = #{cardId}
+          and direction = #{direction}
+    </update>
+
+    <delete id="deleteByCardId">
+        delete from pw_card_progress
+        where card_id = #{cardId}
+    </delete>
+
+    <delete id="deleteByDeckId">
+        delete from pw_card_progress cp
+        using pw_card c
+        where c.id = cp.card_id
+          and c.deck_id = #{deckId}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM pw_card_progress WHERE user_id = #{userId}
+    </delete>
+
+    <select id="countReviewedDirectionsToday" resultType="int">
+        select count(*)
+        from (
+            select distinct cp.card_id, cp.direction
+            from pw_card_progress cp
+            inner join pw_card c on c.id = cp.card_id
+            where cp.user_id = #{userId}
+              and cp.last_review_date = #{today}
+              and c.deck_id = #{deckId}
+        ) t
+    </select>
+
+</mapper>

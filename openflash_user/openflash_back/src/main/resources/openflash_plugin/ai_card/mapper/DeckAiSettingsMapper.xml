@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_plugin.ai_card.mapper.DeckAiSettingsMapper">
+
+    <resultMap id="DeckAiSettingsResultMap" type="openflash_plugin.ai_card.entity.DeckAiSettings">
+        <id column="id" property="id"/>
+        <result column="deck_id" property="deckId"/>
+        <result column="ai_explanation_enabled_a" property="aiExplanationEnabledA" javaType="java.lang.Boolean"/>
+        <result column="ai_explanation_enabled_b" property="aiExplanationEnabledB" javaType="java.lang.Boolean"/>
+        <result column="ai_explanation_prompt_a" property="aiExplanationPromptA"/>
+        <result column="ai_explanation_prompt_b" property="aiExplanationPromptB"/>
+        <result column="ai_completion_enabled" property="aiCompletionEnabled" javaType="java.lang.Boolean"/>
+        <result column="ai_completion_prompt" property="aiCompletionPrompt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findByDeckId" resultMap="DeckAiSettingsResultMap">
+        SELECT id, deck_id,
+               ai_explanation_enabled_a, ai_explanation_enabled_b,
+               ai_explanation_prompt_a, ai_explanation_prompt_b,
+               ai_completion_enabled, ai_completion_prompt,
+               updated_at
+        FROM pw_deck_ai_settings
+        WHERE deck_id = #{deckId}
+        LIMIT 1
+    </select>
+
+    <insert id="upsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_deck_ai_settings (
+            deck_id,
+            ai_explanation_enabled_a,
+            ai_explanation_enabled_b,
+            ai_explanation_prompt_a,
+            ai_explanation_prompt_b,
+            ai_completion_enabled,
+            ai_completion_prompt,
+            updated_at
+        ) VALUES (
+            #{deckId},
+            #{aiExplanationEnabledA},
+            #{aiExplanationEnabledB},
+            #{aiExplanationPromptA},
+            #{aiExplanationPromptB},
+            #{aiCompletionEnabled},
+            #{aiCompletionPrompt},
+            #{updatedAt}
+        )
+        ON CONFLICT (deck_id) DO UPDATE SET
+            ai_explanation_enabled_a = EXCLUDED.ai_explanation_enabled_a,
+            ai_explanation_enabled_b = EXCLUDED.ai_explanation_enabled_b,
+            ai_explanation_prompt_a = EXCLUDED.ai_explanation_prompt_a,
+            ai_explanation_prompt_b = EXCLUDED.ai_explanation_prompt_b,
+            ai_completion_enabled = EXCLUDED.ai_completion_enabled,
+            ai_completion_prompt = EXCLUDED.ai_completion_prompt,
+            updated_at = EXCLUDED.updated_at
+    </insert>
+
+    <delete id="deleteByDeckId">
+        DELETE FROM pw_deck_ai_settings
+        WHERE deck_id = #{deckId}
+    </delete>
+
+</mapper>

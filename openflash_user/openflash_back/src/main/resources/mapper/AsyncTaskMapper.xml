@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.AsyncTaskMapper">
+
+    <sql id="resumableCompletedOrRetryableFailed">
+        pw_async_task.status = 'COMPLETED'
+        or (pw_async_task.status = 'FAILED' and #{rescheduleFailed} = true)
+    </sql>
+
+    <resultMap id="AsyncTaskResultMap" type="openflash_core.entity.AsyncTask">
+        <id column="id" property="id"/>
+        <result column="biz_key" property="bizKey"/>
+        <result column="task_type" property="taskType"/>
+        <result column="payload" property="payload"/>
+        <result column="status" property="status"/>
+        <result column="retry_count" property="retryCount"/>
+        <result column="max_retry_count" property="maxRetryCount"/>
+        <result column="next_retry_at" property="nextRetryAt"/>
+        <result column="lease_until" property="leaseUntil"/>
+        <result column="last_error" property="lastError"/>
+        <result column="priority" property="priority"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <insert id="upsertTask">
+        insert into pw_async_task (
+            biz_key, task_type, payload, owner_user_id, status, retry_count, max_retry_count,
+            next_retry_at, lease_until, last_error, priority
+        ) values (
+            #{bizKey}, #{taskType}, #{payload}, #{ownerUserId}, 'PENDING', 0, #{maxRetryCount},
+            null, null, null, #{priority}
+        )
+        on conflict (biz_key) do update set
+            task_type = excluded.task_type,
+            payload = excluded.payload,
+            owner_user_id = excluded.owner_user_id,
+            max_retry_count = excluded.max_retry_count,
+            priority = greatest(pw_async_task.priority, excluded.priority),
+            retry_count = case when <include refid="resumableCompletedOrRetryableFailed"/> then 0 else pw_async_task.retry_count end,
+            next_retry_at = case when <include refid="resumableCompletedOrRetryableFailed"/> then null else pw_async_task.next_retry_at end,
+            lease_until = case when <include refid="resumableCompletedOrRetryableFailed"/> then null else pw_async_task.lease_until end,
+            last_error = case when <include refid="resumableCompletedOrRetryableFailed"/> then null else pw_async_task.last_error end,
+            status = case when <include refid="resumableCompletedOrRetryableFailed"/> then 'PENDING' else pw_async_task.status end
+    </insert>
+
+    <select id="findClaimableBatch" resultMap="AsyncTaskResultMap">
+        select id, biz_key, task_type, payload, status, retry_count, max_retry_count,
+               next_retry_at, lease_until, last_error, priority, created_at, updated_at
+        from pw_async_task
+        where (status = 'PENDING' and (next_retry_at is null or next_retry_at &lt;= #{now}))
+           or (status = 'PROCESSING' and lease_until is not null and lease_until &lt;= #{now})
+        order by priority desc, created_at asc, id asc
+        limit #{limit}
+    </select>
+
+    <update id="claimById">
+        update pw_async_task
+        set status = 'PROCESSING',
+            lease_until = #{leaseUntil},
+            last_error = null
+        where id = #{id}
+          and (
+            (status = 'PENDING' and (next_retry_at is null or next_retry_at &lt;= #{now}))
+            or (status = 'PROCESSING' and lease_until is not null and lease_until &lt;= #{now})
+          )
+    </update>
+
+    <update id="markCompleted">
+        update pw_async_task
+        set status = 'COMPLETED',
+            lease_until = null,
+            next_retry_at = null,
+            last_error = null
+        where id = #{id}
+          and status = 'PROCESSING'
+          and lease_until = #{leaseUntil}
+    </update>
+
+    <update id="markRetry">
+        update pw_async_task
+        set status = 'PENDING',
+            retry_count = retry_count + 1,
+            next_retry_at = #{nextRetryAt},
+            lease_until = null,
+            last_error = #{lastError}
+        where id = #{id}
+          and status = 'PROCESSING'
+          and lease_until = #{leaseUntil}
+    </update>
+
+    <update id="markFailed">
+        update pw_async_task
+        set status = 'FAILED',
+            retry_count = least(retry_count + 1, max_retry_count),
+            next_retry_at = null,
+            lease_until = null,
+            last_error = #{lastError}
+        where id = #{id}
+          and status = 'PROCESSING'
+          and lease_until = #{leaseUntil}
+    </update>
+
+    <delete id="deleteCompletedBefore">
+        with rows_to_delete as (
+            select id
+            from pw_async_task
+            where status = 'COMPLETED'
+              and updated_at &lt; #{before}
+            order by updated_at asc, id asc
+            limit #{limit}
+        )
+        delete from pw_async_task
+        using rows_to_delete
+        where pw_async_task.id = rows_to_delete.id
+    </delete>
+</mapper>

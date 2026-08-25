@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.PracticeSessionStoreMapper">
+
+    <select id="findData" resultType="java.lang.String">
+        select data
+        from pw_practice_session_store
+        where user_id = #{userId}
+          and deck_id = #{deckId}
+        limit 1
+    </select>
+
+    <insert id="upsert">
+        insert into pw_practice_session_store (user_id, deck_id, data)
+        values (#{userId}, #{deckId}, #{data})
+        on conflict (user_id, deck_id) do update set
+            data       = excluded.data,
+            updated_at = current_timestamp
+    </insert>
+
+    <delete id="delete">
+        delete from pw_practice_session_store
+        where user_id = #{userId}
+          and deck_id = #{deckId}
+    </delete>
+
+    <delete id="deleteByDeckId">
+        DELETE FROM pw_practice_session_store WHERE deck_id = #{deckId}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM pw_practice_session_store WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

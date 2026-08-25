@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_plugin.mask_mode.mapper.MaskModeDeckSettingsMapper">
+
+    <resultMap id="MaskModeDeckSettingsResultMap" type="openflash_plugin.mask_mode.entity.MaskModeDeckSettings">
+        <constructor>
+            <arg column="deck_id" javaType="java.lang.Long"/>
+            <arg column="mode" javaType="java.lang.String"/>
+            <arg column="enabled" javaType="_boolean"/>
+        </constructor>
+    </resultMap>
+
+    <select id="findByDeckId" resultMap="MaskModeDeckSettingsResultMap">
+        SELECT deck_id, mode, enabled
+        FROM pw_mask_mode_deck_settings
+        WHERE deck_id = #{deckId}
+        LIMIT 1
+    </select>
+
+    <insert id="upsert">
+        INSERT INTO pw_mask_mode_deck_settings (
+            deck_id, mode, enabled, updated_at
+        ) VALUES (
+            #{deckId}, #{mode}, #{enabled}, NOW()
+        )
+        ON CONFLICT (deck_id) DO UPDATE SET
+            mode       = EXCLUDED.mode,
+            enabled    = EXCLUDED.enabled,
+            updated_at = EXCLUDED.updated_at
+    </insert>
+
+    <delete id="deleteByDeckId">
+        DELETE FROM pw_mask_mode_deck_settings
+        WHERE deck_id = #{deckId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: openflash_admin_back
+  datasource:
+    url: ${OPENFLASH_DB_URL:jdbc:postgresql://localhost:5432/openflash_db?currentSchema=openflash}
+    username: ${OPENFLASH_DB_USERNAME:postgres}
+    password: ${OPENFLASH_DB_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+  session:
+    jdbc:
+      initialize-schema: never
+
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+  type-aliases-package: openflash_admin.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: ${OPENFLASH_ADMIN_PORT:8081}
+  servlet:
+    session:
+      cookie:
+        name: OPENFLASH_ADMIN_SESSION
+        http-only: true
+        same-site: lax
+
+app:
+  ai-runtime:
+    base-url: ${OPENFLASH_AI_RUNTIME_BASE_URL:http://127.0.0.1:8082}
+    admin-token: ${OPENFLASH_AI_RUNTIME_ADMIN_TOKEN:}
+    connect-timeout-millis: 5000
+    read-timeout-millis: 5000
+  openflash-core-admin:
+    base-url: ${OPENFLASH_CORE_BASE_URL:http://127.0.0.1:8080}
+    token: ${OPENFLASH_ADMIN_INTERNAL_TOKEN:}
+    connect-timeout-millis: 5000
+    read-timeout-millis: 5000
+  cors:
+    allowed-origins:
+      - http://localhost:5174
+      - http://127.0.0.1:5174

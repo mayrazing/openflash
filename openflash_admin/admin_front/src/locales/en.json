@@ -1,0 +1,247 @@
+{
+  "app": {
+    "title": "OpenFlash Admin"
+  },
+  "auth": {
+    "title": "Administrator sign in",
+    "description": "Manage user access and CLIs on this machine.",
+    "username": "Username",
+    "password": "Password",
+    "login": "Sign in",
+    "loggingIn": "Signing in...",
+    "logout": "Sign out"
+  },
+  "nav": {
+    "menu": "Management",
+    "ariaLabel": "Admin navigation",
+    "overview": "Overview",
+    "users": "Users",
+    "platformAi": "Platform AI",
+    "cli": "CLI"
+  },
+  "pages": {
+    "overview": {
+      "title": "System overview",
+      "description": "View the current account and CLI status.",
+      "actions": "Common actions"
+    },
+    "users": {
+      "title": "User management",
+      "description": "Manage account roles and access to platform-provided AI.",
+      "searchLabel": "Search users",
+      "searchPlaceholder": "Username or nickname",
+      "loading": "Loading users...",
+      "loadError": "Could not load users.",
+      "loadErrorDescription": "Check the admin service and try again.",
+      "retry": "Reload",
+      "emptyTitle": "No users found",
+      "emptyDescription": "Try another username or nickname.",
+      "roleLabel": "Account role",
+      "roleAria": "Set {{username}} role to {{role}}",
+      "cliAccess": "Platform AI access",
+      "cliAccessSummary": "{{allowed}} / {{total}} allowed",
+      "manageCliAccess": "Manage",
+      "cliDialogTitle": "Manage CLI access for {{user}}",
+      "closeCliDialog": "Done",
+      "cliAria": "Toggle {{cli}} access for {{username}}",
+      "cliNames": {
+        "codex-cli": "Codex CLI",
+        "codex": "Codex CLI"
+      },
+      "cliRuntime": {
+        "AVAILABLE": "Available",
+        "NOT_INSTALLED": "Not installed",
+        "NOT_LOGGED_IN": "Not signed in",
+        "DISABLED": "Disabled",
+        "ERROR": "Connection failed"
+      },
+      "saving": "Saving...",
+      "updateError": "Could not update access. The previous value was restored. Try again.",
+      "lastAdminError": "The system must keep at least one administrator.",
+      "activeStatus": "Active",
+      "bannedStatus": "Banned",
+      "banUser": "Ban account",
+      "unbanUser": "Unban account",
+      "deleteUser": "Delete account",
+      "deleteConfirmTitle": "Permanently delete account?",
+      "deleteConfirmBody": "This will permanently delete {{user}} and all associated data. This action cannot be undone.",
+      "deleteCancel": "Cancel",
+      "deleteConfirmAction": "Delete",
+      "deleting": "Deleting...",
+      "accountActionError": "The account action failed. The previous state was restored. Try again.",
+      "userServiceUnavailableError": "User service is not running. Start it before permanently deleting an account.",
+      "selfAccountActionDisabled": "You cannot ban or delete the account you are currently signed in with.",
+      "selfAccountMutationError": "You cannot ban or delete the account you are currently signed in with.",
+      "platformProvided": "Platform provided",
+      "runtimeUnavailable": "AI runtime unavailable",
+      "runtimeUnavailableDescription": "Users remain visible, but platform AI access changes are disabled until the runtime starts."
+    },
+    "platformAi": {
+      "title": "Platform AI",
+      "description": "Manage shared AI connections, fixed models and user access.",
+      "apiSectionTitle": "API configuration",
+      "apiSectionDescription": "Manage platform API connections, credentials and fixed models.",
+      "loading": "Loading platform AI...",
+      "loadError": "Could not load platform AI.",
+      "retry": "Reload",
+      "runtimeUnavailable": "AI runtime unavailable",
+      "runtimeUnavailableDescription": "Safe catalog metadata remains visible. Runtime actions are disabled until the service starts.",
+      "addConnection": "Add connection",
+      "apiConnection": "Anthropic API",
+      "codexConnection": "Codex CLI",
+      "createConnection": "Create connection",
+      "saveApiConfiguration": "Save AI configuration",
+      "connectionType": "Connection type",
+      "baseUrl": "Base URL",
+      "providerName": "Provider name",
+      "requestUrl": "Request URL (Anthropic-compatible)",
+      "modelName": "Model name",
+      "sortOrder": "Sort order",
+      "cancel": "Cancel",
+      "defaultDeny": "New model access defaults to selected users.",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "credentialConfigured": "Credential configured",
+      "credentialMissing": "Credential missing",
+      "replaceCredential": "Replace credential",
+      "apiKey": "API key",
+      "saveCredential": "Save credential",
+      "addOffering": "Add model",
+      "modelKey": "Model key",
+      "discoverModels": "Discover models",
+      "discoveryUnavailable": "Model discovery is unavailable. Enter a model key manually.",
+      "createOffering": "Create model",
+      "allUsers": "All users",
+      "selectedUsers": "Selected users",
+      "defaultAccessAria": "Allow {{model}} for all users",
+      "connectionEnabledAria": "Enable {{name}}",
+      "offeringEnabledAria": "Enable {{model}}",
+      "deleteConnection": "Delete connection",
+      "deleteOffering": "Delete model",
+      "deleteConfirmTitle": "Delete permanently?",
+      "deleteConnectionConfirmBody": "This permanently deletes the connection and its models.",
+      "deleteOfferingConfirmBody": "This permanently deletes the model offering.",
+      "deleteConfirmAction": "Delete permanently",
+      "saveError": "The platform AI change failed. Try again.",
+      "emptyTitle": "No platform AI connections",
+      "emptyDescription": "Add an Anthropic API or Codex CLI connection.",
+      "emptyApiTitle": "No API connections",
+      "emptyApiDescription": "Add an Anthropic API connection.",
+      "runtimeStatus": "Runtime: {{status}}",
+      "runtime": {
+        "AVAILABLE": "Available",
+        "ERROR": "Unavailable",
+        "UNAVAILABLE": "Temporarily unavailable"
+      }
+    },
+    "cli": {
+      "title": "CLI management",
+      "description": "Manage CLI services, sign-in state and user access on this machine.",
+      "connectedTitle": "Connected CLIs",
+      "connectedHint": "Other CLIs will appear in this list when they are connected.",
+      "codex": {
+        "name": "Codex",
+        "description": "OpenAI Codex CLI",
+        "detailTitle": "Codex CLI",
+        "currentDescription": "Currently selected CLI.",
+        "current": "Managing now",
+        "globalDisabled": "Disabled",
+        "loading": "Loading Codex status...",
+        "loadError": "Could not load Codex status.",
+        "loadErrorDescription": "Check the admin and runtime services, then try again.",
+        "retry": "Reload",
+        "globalSwitch": "Global Codex switch",
+        "globalSwitchDescription": "When disabled, no user or background task can call Codex.",
+        "globalSwitchAria": "Toggle Codex globally",
+        "runtimeTitle": "Runtime status",
+        "changeTiming": "Change timing",
+        "globalDelay": "User access changes apply immediately. The global switch can take up to {{seconds}} seconds.",
+        "updateError": "Could not update the global switch. The previous value was restored. Try again.",
+        "loginActionError": "The Codex sign-in action failed. Check the services and try again.",
+        "loginTitle": "Codex sign-in",
+        "loginOnlyHere": "Only administrators can sign in the CLI from this page.",
+        "startLogin": "Sign in to Codex CLI",
+        "waitingTitle": "Complete sign-in",
+        "deviceCode": "Device code",
+        "openVerification": "Open verification page",
+        "cancelLogin": "Cancel sign-in",
+        "accountTitle": "Codex account",
+        "accountComplete": "Shared sign-in complete",
+        "accountPrivacy": "Account details and tokens are not shown to regular users.",
+        "refreshStatus": "Refresh status",
+        "logoutAccount": "Sign out of Codex",
+        "logoutConfirmTitle": "Sign out of Codex?",
+        "logoutConfirmBody": "This signs out the shared Codex CLI account on this machine. Users and background tasks cannot start new Codex requests until an administrator signs in again.",
+        "logoutCancel": "Cancel",
+        "logoutActionError": "Could not sign out of Codex. The shared account remains available. Check the services and try again.",
+        "runtime": {
+          "AVAILABLE": {
+            "label": "Available",
+            "description": "Codex CLI is signed in and available to authorized users."
+          },
+          "NOT_INSTALLED": {
+            "label": "Not installed",
+            "description": "Codex CLI was not detected on this machine."
+          },
+          "NOT_LOGGED_IN": {
+            "label": "Not signed in",
+            "description": "Codex CLI has not completed sign-in on this machine."
+          },
+          "DISABLED": {
+            "label": "Disabled",
+            "description": "The Codex runtime service is currently disabled."
+          },
+          "ERROR": {
+            "label": "Connection failed",
+            "description": "Codex CLI status is unavailable. Check the service logs and try again."
+          }
+        },
+        "login": {
+          "IDLE": {
+            "label": "Not started",
+            "message": "Start sign-in to show device verification details here."
+          },
+          "STARTING": {
+            "label": "Starting",
+            "message": "Generating a Codex sign-in device code."
+          },
+          "PENDING": {
+            "label": "Waiting for sign-in",
+            "message": "Open the verification page and enter the device code below."
+          },
+          "SUCCEEDED": {
+            "label": "Signed in",
+            "message": "Codex CLI shared sign-in is complete."
+          },
+          "FAILED": {
+            "label": "Sign-in failed",
+            "message": "This sign-in attempt failed. Start again."
+          },
+          "EXPIRED": {
+            "label": "Sign-in expired",
+            "message": "The device code expired. Start again."
+          },
+          "CANCELED": {
+            "label": "Canceled",
+            "message": "This sign-in attempt was canceled."
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "saved": "Saved"
+  },
+  "theme": {
+    "dark": "Dark mode"
+  },
+  "errors": {
+    "requiredCredentials": "Enter the administrator username and password.",
+    "invalidCredentials": "The username or password is incorrect.",
+    "loginRateLimited": "Too many login attempts. Try again later.",
+    "unauthorized": "Your session expired. Sign in again.",
+    "forbidden": "This account does not have administrator access.",
+    "generic": "The request failed. Check the admin service and try again."
+  }
+}

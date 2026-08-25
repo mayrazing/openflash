@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_ai_runtime.mapper.PlatformAiConnectionMapper">
+    <resultMap id="connection" type="openflash_ai_runtime.entity.PlatformAiConnection">
+        <constructor>
+            <idArg column="id" javaType="_long"/>
+            <arg column="connection_key" javaType="java.lang.String"/>
+            <arg column="kind" javaType="java.lang.String"/>
+            <arg column="protocol" javaType="java.lang.String"/>
+            <arg column="cli_key" javaType="java.lang.String"/>
+            <arg column="display_name" javaType="java.lang.String"/>
+            <arg column="base_url" javaType="java.lang.String"/>
+            <arg column="credentials_configured" javaType="_boolean"/>
+            <arg column="enabled" javaType="_boolean"/>
+            <arg column="sort_order" javaType="_int"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="safeColumns">
+        id, connection_key, kind, protocol, cli_key,
+        config -&gt;&gt; 'displayName' AS display_name,
+        config -&gt;&gt; 'baseUrl' AS base_url,
+        credentials_configured, enabled, sort_order
+    </sql>
+
+    <select id="findAll" resultMap="connection">
+        SELECT <include refid="safeColumns"/>
+        FROM pw_platform_ai_connection
+        ORDER BY sort_order, id
+    </select>
+
+    <select id="findByKey" resultMap="connection">
+        SELECT <include refid="safeColumns"/>
+        FROM pw_platform_ai_connection
+        WHERE connection_key = #{connectionKey}
+        LIMIT 1
+    </select>
+
+    <select id="findById" resultMap="connection">
+        SELECT <include refid="safeColumns"/>
+        FROM pw_platform_ai_connection
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_platform_ai_connection
+            (connection_key, kind, protocol, cli_key, config,
+             credentials_configured, enabled, sort_order)
+        VALUES
+            (#{connectionKey}, #{kind}, #{protocol}, #{cliKey},
+             CASE WHEN #{baseUrl} IS NULL THEN json_build_object()
+                  ELSE json_build_object('displayName', #{displayName}, 'baseUrl', #{baseUrl}) END,
+             CASE WHEN #{credentialsConfigured} THEN 1 ELSE 0 END,
+             CASE WHEN #{enabled} THEN 1 ELSE 0 END,
+             #{sortOrder})
+    </insert>
+
+    <update id="update">
+        UPDATE pw_platform_ai_connection
+        SET config = CASE WHEN #{baseUrl} IS NULL THEN json_build_object()
+                          ELSE jsonb_set(config::jsonb, '{baseUrl}', to_jsonb(#{baseUrl}::text), true)::json END,
+            enabled = CASE WHEN #{enabled} THEN 1 ELSE 0 END,
+            sort_order = #{sortOrder}
+        WHERE connection_key = #{connectionKey}
+    </update>
+
+    <update id="setCredentialsConfigured">
+        UPDATE pw_platform_ai_connection
+        SET credentials_configured = CASE WHEN #{configured} THEN 1 ELSE 0 END
+        WHERE connection_key = #{connectionKey}
+    </update>
+
+    <delete id="deleteByKey">
+        DELETE FROM pw_platform_ai_connection
+        WHERE connection_key = #{connectionKey}
+    </delete>
+</mapper>

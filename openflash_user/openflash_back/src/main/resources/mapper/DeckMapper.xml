@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.DeckMapper">
+
+    <resultMap id="DeckResultMap" type="openflash_core.entity.Deck">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="name" property="name"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+        <result column="active_count" property="activeCount"/>
+        <result column="mastered_count" property="masteredCount"/>
+    </resultMap>
+
+    <select id="findByUserId" resultMap="DeckResultMap">
+        select
+            d.id,
+            d.user_id,
+            d.name,
+            d.created_at,
+            d.updated_at,
+            d.deleted,
+            sum(case when c.id is not null and mastered_cards.card_id is null then 1 else 0 end) as active_count,
+            sum(case when mastered_cards.card_id is not null then 1 else 0 end) as mastered_count
+        from pw_deck d
+        left join pw_card c
+            on c.deck_id = d.id
+           and c.deleted = 0
+        left join (
+            select card_id
+            from pw_card_progress
+            where user_id = #{userId}
+              and mastered_at is not null
+            group by card_id
+        ) mastered_cards
+            on mastered_cards.card_id = c.id
+        where d.user_id = #{userId}
+          and d.deleted = 0
+        group by d.id, d.user_id, d.name, d.created_at, d.updated_at, d.deleted
+        order by d.created_at desc, d.id desc
+    </select>
+
+    <select id="findIdsByUserIdIncludingDeleted" resultType="java.lang.Long">
+        SELECT id FROM pw_deck WHERE user_id = #{userId} ORDER BY id
+    </select>
+
+    <select id="findById" resultMap="DeckResultMap">
+        select id, user_id, name, created_at, updated_at, deleted
+        from pw_deck
+        where id = #{id}
+          and deleted = 0
+        limit 1
+    </select>
+
+    <select id="findByIdAndUserId" resultMap="DeckResultMap">
+        select id, user_id, name, created_at, updated_at, deleted
+        from pw_deck
+        where id = #{id}
+          and user_id = #{userId}
+          and deleted = 0
+        limit 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into pw_deck (user_id, name)
+        values (#{userId}, #{name})
+    </insert>
+
+    <update id="updateName">
+        update pw_deck
+        set name = #{name}
+        where id = #{id}
+          and user_id = #{userId}
+          and deleted = 0
+    </update>
+
+    <delete id="deleteById">
+        delete from pw_deck
+        where id = #{id}
+          and user_id = #{userId}
+    </delete>
+
+</mapper>

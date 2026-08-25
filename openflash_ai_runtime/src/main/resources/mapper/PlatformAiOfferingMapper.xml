@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_ai_runtime.mapper.PlatformAiOfferingMapper">
+    <resultMap id="offering" type="openflash_ai_runtime.entity.PlatformAiOffering">
+        <constructor>
+            <idArg column="id" javaType="_long"/>
+            <arg column="connection_id" javaType="_long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="model_key" javaType="java.lang.String"/>
+            <arg column="enabled" javaType="_boolean"/>
+            <arg column="default_access" javaType="_boolean"/>
+            <arg column="sort_order" javaType="_int"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="usable" type="openflash_ai_runtime.mapper.PlatformAiOfferingMapper$UsableOfferingRow">
+        <constructor>
+            <idArg column="offering_id" javaType="_long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="model_key" javaType="java.lang.String"/>
+            <arg column="offering_enabled" javaType="_boolean"/>
+            <arg column="default_access" javaType="_boolean"/>
+            <arg column="offering_sort_order" javaType="_int"/>
+            <arg column="connection_id" javaType="_long"/>
+            <arg column="connection_key" javaType="java.lang.String"/>
+            <arg column="kind" javaType="java.lang.String"/>
+            <arg column="protocol" javaType="java.lang.String"/>
+            <arg column="cli_key" javaType="java.lang.String"/>
+            <arg column="base_url" javaType="java.lang.String"/>
+            <arg column="credentials_configured" javaType="_boolean"/>
+            <arg column="connection_enabled" javaType="_boolean"/>
+            <arg column="connection_sort_order" javaType="_int"/>
+        </constructor>
+    </resultMap>
+
+    <select id="findByConnectionId" resultMap="offering">
+        SELECT id, connection_id, offering_key, model_key, enabled, default_access, sort_order
+        FROM pw_platform_ai_offering
+        WHERE connection_id = #{connectionId}
+        ORDER BY sort_order, id
+    </select>
+
+    <select id="findByKey" resultMap="offering">
+        SELECT id, connection_id, offering_key, model_key, enabled, default_access, sort_order
+        FROM pw_platform_ai_offering
+        WHERE offering_key = #{offeringKey}
+        LIMIT 1
+    </select>
+
+    <sql id="usableSelect">
+        SELECT o.id AS offering_id, o.offering_key, o.model_key,
+               o.enabled AS offering_enabled, o.default_access,
+               o.sort_order AS offering_sort_order,
+               c.id AS connection_id, c.connection_key, c.kind, c.protocol, c.cli_key,
+               c.config -&gt;&gt; 'baseUrl' AS base_url,
+               c.credentials_configured, c.enabled AS connection_enabled,
+               c.sort_order AS connection_sort_order
+        FROM pw_platform_ai_offering o
+        JOIN pw_platform_ai_connection c ON c.id = o.connection_id
+        LEFT JOIN pw_platform_ai_user_access a
+          ON a.offering_id = o.id AND a.user_id = #{userId}
+        WHERE c.enabled = 1
+          AND o.enabled = 1
+          AND COALESCE(a.enabled, o.default_access) = 1
+    </sql>
+
+    <select id="findUsableByUserId" resultMap="usable">
+        <include refid="usableSelect"/>
+        ORDER BY c.sort_order, o.sort_order, o.id
+    </select>
+
+    <select id="findUsableByKeyAndUserId" resultMap="usable">
+        <include refid="usableSelect"/>
+          AND o.offering_key = #{offeringKey}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_platform_ai_offering
+            (connection_id, offering_key, model_key, enabled, default_access, sort_order)
+        VALUES
+            (#{connectionId}, #{offeringKey}, #{modelKey},
+             CASE WHEN #{enabled} THEN 1 ELSE 0 END,
+             CASE WHEN #{defaultAccess} THEN 1 ELSE 0 END,
+             #{sortOrder})
+    </insert>
+
+    <update id="update">
+        UPDATE pw_platform_ai_offering
+        SET model_key = #{modelKey},
+            enabled = CASE WHEN #{enabled} THEN 1 ELSE 0 END,
+            sort_order = #{sortOrder}
+        WHERE offering_key = #{offeringKey}
+    </update>
+
+    <update id="updateEnabledByConnectionId">
+        UPDATE pw_platform_ai_offering
+        SET enabled = CASE WHEN #{enabled} THEN 1 ELSE 0 END
+        WHERE connection_id = #{connectionId} AND model_key IS NULL
+    </update>
+
+    <update id="updateDefaultAccess">
+        UPDATE pw_platform_ai_offering
+        SET default_access = CASE WHEN #{enabled} THEN 1 ELSE 0 END
+        WHERE offering_key = #{offeringKey}
+    </update>
+
+    <delete id="deleteByKey">
+        DELETE FROM pw_platform_ai_offering WHERE offering_key = #{offeringKey}
+    </delete>
+</mapper>

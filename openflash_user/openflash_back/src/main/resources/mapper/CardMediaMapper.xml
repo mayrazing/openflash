@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.CardMediaMapper">
+
+    <resultMap id="CardMediaResultMap" type="openflash_core.entity.CardMedia">
+        <id column="id" property="id"/>
+        <result column="card_id" property="cardId"/>
+        <result column="card_side" property="cardSide"/>
+        <result column="media_url" property="mediaUrl"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <select id="findByCardId" resultMap="CardMediaResultMap">
+        select id, card_id, card_side, media_url, sort_order, created_at
+        from pw_card_media
+        where card_id = #{cardId}
+        order by card_side asc, sort_order asc, id asc
+    </select>
+
+    <select id="findByCardIds" resultMap="CardMediaResultMap">
+        select id, card_id, card_side, media_url, sort_order, created_at
+        from pw_card_media
+        where card_id in
+        <foreach collection="cardIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by card_side asc, sort_order asc, id asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into pw_card_media (card_id, card_side, media_url, sort_order)
+        values (#{cardId}, #{cardSide}, #{mediaUrl}, #{sortOrder})
+    </insert>
+
+    <select id="findByDeckId" resultMap="CardMediaResultMap">
+        select cm.id, cm.card_id, cm.card_side, cm.media_url, cm.sort_order, cm.created_at
+        from pw_card_media cm
+        inner join pw_card c on c.id = cm.card_id
+        where c.deck_id = #{deckId}
+    </select>
+
+    <select id="lockFirstReferenceIdByOtherUser" resultType="long">
+        select cm.id
+        from pw_card_media cm
+        inner join pw_card c on c.id = cm.card_id
+        inner join pw_deck d on d.id = c.deck_id
+        where cm.media_url = #{relativePath}
+          and d.user_id &lt;&gt; #{userId}
+        order by cm.id
+        limit 1
+        for update
+    </select>
+
+    <delete id="deleteByCardId">
+        delete from pw_card_media
+        where card_id = #{cardId}
+    </delete>
+
+    <delete id="deleteByDeckId">
+        delete from pw_card_media cm
+        using pw_card c
+        where c.id = cm.card_id
+          and c.deck_id = #{deckId}
+    </delete>
+
+</mapper>

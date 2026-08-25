@@ -1,0 +1,29 @@
+server:
+  address: ${OPENFLASH_AI_RUNTIME_ADDRESS:127.0.0.1}
+  port: ${OPENFLASH_AI_RUNTIME_PORT:8082}
+spring:
+  application:
+    name: openflash_ai_runtime
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  datasource:
+    url: ${OPENFLASH_DB_URL:jdbc:postgresql://localhost:5432/openflash_db?currentSchema=openflash}
+    username: ${OPENFLASH_DB_USERNAME:postgres}
+    password: ${OPENFLASH_DB_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+app:
+  internal:
+    admin-token: ${OPENFLASH_AI_RUNTIME_ADMIN_TOKEN:}
+    core-token: ${OPENFLASH_AI_RUNTIME_CORE_TOKEN:}
+  platform-secret:
+    # Standard Base64. Decoded password must be at least 32 bytes; salt at least 16 bytes.
+    password: ${OPENFLASH_PLATFORM_AI_ENCRYPTOR_PASSWORD:}
+    salt: ${OPENFLASH_PLATFORM_AI_ENCRYPTOR_SALT:}
+  codex:
+    enabled: ${OPENFLASH_AI_RUNTIME_CODEX_ENABLED:true}

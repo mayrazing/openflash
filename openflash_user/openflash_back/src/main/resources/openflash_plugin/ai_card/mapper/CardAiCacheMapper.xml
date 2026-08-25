@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_plugin.ai_card.mapper.CardAiCacheMapper">
+
+    <resultMap id="CardAiCacheResultMap" type="openflash_plugin.ai_card.entity.CardAiCache">
+        <id column="id" property="id"/>
+        <result column="owner_user_id" property="ownerUserId"/>
+        <result column="content_fingerprint" property="contentFingerprint"/>
+        <result column="prompt_fingerprint" property="promptFingerprint"/>
+        <result column="prompt" property="prompt"/>
+        <result column="content" property="content"/>
+        <result column="think_used" property="thinkUsed" javaType="java.lang.Boolean"/>
+        <result column="last_accessed_at" property="lastAccessedAt"/>
+        <result column="last_generated_at" property="lastGeneratedAt"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findByFingerprint" resultMap="CardAiCacheResultMap">
+        select id, owner_user_id, content_fingerprint, prompt_fingerprint, prompt, content, think_used, last_accessed_at, last_generated_at, created_at, updated_at
+        from pw_card_ai_cache
+        where owner_user_id = #{ownerUserId}
+          and content_fingerprint = #{fingerprint}
+        limit 1
+    </select>
+
+    <insert id="saveReady">
+        insert into pw_card_ai_cache (
+            owner_user_id, content_fingerprint, prompt_fingerprint, prompt, content, think_used, last_accessed_at, last_generated_at
+        ) values (
+            #{ownerUserId}, #{fingerprint}, #{promptFingerprint}, #{prompt}, #{content}, #{thinkUsed}, #{accessedAt}, #{generatedAt}
+        )
+        on conflict (owner_user_id, content_fingerprint) do update set
+            prompt_fingerprint = excluded.prompt_fingerprint,
+            prompt = excluded.prompt,
+            content = excluded.content,
+            think_used = excluded.think_used,
+            last_accessed_at = coalesce(excluded.last_accessed_at, pw_card_ai_cache.last_accessed_at),
+            last_generated_at = excluded.last_generated_at
+    </insert>
+
+    <update id="touchAccessedAtIfStale">
+        update pw_card_ai_cache
+        set last_accessed_at = #{accessedAt}
+        where owner_user_id = #{ownerUserId}
+          and content_fingerprint = #{fingerprint}
+          and (last_accessed_at is null or last_accessed_at &lt; #{minEligibleBefore})
+    </update>
+
+    <delete id="deleteExpired">
+        with rows_to_delete as (
+            select id
+            from pw_card_ai_cache
+            where (
+                (last_accessed_at is not null and last_accessed_at &lt; #{before})
+                or (last_accessed_at is null and last_generated_at is not null and last_generated_at &lt; #{before})
+            )
+            and prompt not in (
+                select content from (
+                    select trim(c.side_a) as content
+                    from pw_card c
+                    where c.side_a is not null
+                      and trim(c.side_a) != ''
+                      and not exists (
+                          select 1 from pw_card_progress cp
+                          where cp.card_id = c.id and cp.state != 'new'
+                      )
+                    union
+                    select trim(c.side_b) as content
+                    from pw_card c
+                    where c.side_b is not null
+                      and trim(c.side_b) != ''
+                      and not exists (
+                          select 1 from pw_card_progress cp
+                          where cp.card_id = c.id and cp.state != 'new'
+                      )
+                ) t
+            )
+            order by coalesce(last_accessed_at, last_generated_at) asc
+            limit #{limit}
+        )
+        delete from pw_card_ai_cache
+        using rows_to_delete
+        where pw_card_ai_cache.id = rows_to_delete.id
+    </delete>
+
+</mapper>

@@ -1,0 +1,33 @@
+{
+  "name": "openflash-browser-extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "theme:sync": "node scripts/syncAppleTheme.mjs --write",
+    "theme:check": "node scripts/syncAppleTheme.mjs --check",
+    "test": "node --test \"test/**/*.test.js\"",
+    "build": "node scripts/build.mjs",
+    "test:build": "npm run build && node --test build-test/buildOutput.test.js",
+    "lint": "eslint .",
+    "test:e2e": "playwright test e2e/extension-ui.spec.js"
+  },
+  "dependencies": {
+    "konsta": "^5.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.61.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "tailwindcss": "^4.2.2",
+    "vite": "^6.3.5"
+  }
+}

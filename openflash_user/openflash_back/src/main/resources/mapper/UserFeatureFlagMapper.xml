@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.UserFeatureFlagMapper">
+
+    <select id="findRolloutType" resultType="String">
+        select rollout_type from pw_feature_flag where feature_key = #{featureKey}
+    </select>
+
+    <select id="findUserEnabled" resultType="java.lang.Boolean">
+        select enabled from pw_user_feature_flag
+        where feature_key = #{featureKey} and user_id = #{userId}
+    </select>
+
+    <insert id="upsertUserEnabled">
+        insert into pw_user_feature_flag (feature_key, user_id, enabled)
+        values (#{featureKey}, #{userId}, CASE WHEN #{enabled} THEN 1 ELSE 0 END)
+        on conflict (user_id, feature_key) do update set
+            enabled = excluded.enabled,
+            updated_at = current_timestamp
+    </insert>
+
+    <delete id="deleteByUserId">
+        delete from pw_user_feature_flag where user_id = #{userId}
+    </delete>
+
+</mapper>

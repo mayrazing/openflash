@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_plugin.ai_card.mapper.AiCardUserTaskCleanupMapper">
+
+    <delete id="deleteByUserId">
+        DELETE FROM pw_async_task
+        WHERE task_type IN ('AI_CACHE_BUILD', 'CARD_SIDE_COMPLETION')
+          AND payload IS JSON
+          AND (
+            (CASE WHEN payload IS JSON THEN payload::jsonb END) -&gt;&gt; 'userId' = CAST(#{userId} AS TEXT)
+            OR (CASE WHEN payload IS JSON THEN payload::jsonb END) #&gt;&gt; '{build,userId}' = CAST(#{userId} AS TEXT)
+            OR (CASE WHEN payload IS JSON THEN payload::jsonb END) #&gt;&gt; '{notificationTarget,userId}' = CAST(#{userId} AS TEXT)
+          )
+    </delete>
+
+</mapper>

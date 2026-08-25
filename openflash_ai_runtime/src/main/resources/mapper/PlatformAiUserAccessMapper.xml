@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_ai_runtime.mapper.PlatformAiUserAccessMapper">
+    <insert id="upsert">
+        INSERT INTO pw_platform_ai_user_access (user_id, offering_id, enabled)
+        VALUES (#{userId}, #{offeringId}, CASE WHEN #{enabled} THEN 1 ELSE 0 END)
+        ON CONFLICT (user_id, offering_id) DO UPDATE SET enabled = EXCLUDED.enabled
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM pw_platform_ai_user_access
+        WHERE user_id = #{userId} AND offering_id = #{offeringId}
+    </delete>
+</mapper>

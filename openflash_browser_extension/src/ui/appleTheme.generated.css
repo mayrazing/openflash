@@ -1,0 +1,261 @@
+/* Generated from openflash_user/openflash_front/src/index.css.
+ * Run `npm run theme:sync` to update.
+ */
+
+:root, .openflash-konsta-root {
+/* app-theme:light:start */
+  --app-background: #f2f2f7;
+  --app-surface-primary: #ffffff;
+  --app-surface-secondary: #f2f2f7;
+  --app-surface-tertiary: #e5e5ea;
+  --app-fill-secondary: #e5e5ea;
+  --app-overlay: rgba(0, 0, 0, 0.4);
+  --app-elevation-shadow: rgba(0, 0, 0, 0.22);
+  --app-label-primary: #000000;
+  --app-label-secondary: #8e8e93;
+  --app-label-tertiary: #aeaeb2;
+  --app-separator: #c7c7cc;
+  --app-control-border: #8e8e93;
+  --app-accent-label: #0088ff;
+  --app-accent-fill: #0088ff;
+  --app-on-accent: #ffffff;
+  --app-accent-fill-hover: #0088ff;
+  --app-accent-fill-pressed: #0088ff;
+  --app-disabled-fill: #e5e5ea;
+  --app-disabled-label: #8e8e93;
+  --app-danger-label: #ff383c;
+  --app-danger-fill: #ff383c;
+  --app-danger-fill-hover: #ff383c;
+  --app-danger-fill-pressed: #ff383c;
+  --app-danger-tonal: #f2f2f7;
+  --app-on-danger: #ffffff;
+  --app-warning-label: #ff8d28;
+  --app-warning-fill: #ff8d28;
+  --app-warning-fill-hover: #ff8d28;
+  --app-warning-fill-pressed: #ff8d28;
+  --app-warning-tonal: #f2f2f7;
+  --app-on-warning: #ffffff;
+  --app-success-label: #34c759;
+  --app-success-fill: #34c759;
+  --app-success-fill-hover: #34c759;
+  --app-success-fill-pressed: #34c759;
+  --app-success-tonal: #f2f2f7;
+  --app-on-success: #ffffff;
+  --app-practice-again: var(--app-danger-label);
+  --app-practice-again-tonal: #f2f2f7;
+  --app-practice-again-tonal-pressed: #e5e5ea;
+  --app-practice-hard: var(--app-warning-label);
+  --app-practice-hard-tonal: #f2f2f7;
+  --app-practice-hard-tonal-pressed: #e5e5ea;
+  --app-practice-good: var(--app-accent-label);
+  --app-practice-good-tonal: #f2f2f7;
+  --app-practice-good-tonal-pressed: #e5e5ea;
+  --app-practice-easy: var(--app-success-label);
+  --app-practice-easy-tonal: #f2f2f7;
+  --app-practice-easy-tonal-pressed: #e5e5ea;
+  --app-due-overdue: var(--app-danger-label);
+  --app-due-today: var(--app-warning-label);
+  --app-due-tomorrow: var(--app-accent-label);
+  --app-familiar-base: #cb30e0;
+  --app-familiar-label: var(--app-familiar-base);
+  --app-selected-fill: #f2f2f7;
+  --app-selected-border: var(--app-accent-label);
+  --app-focus: var(--app-accent-label);
+  --app-code-surface: #000000;
+  --app-code-label: #ffffff;
+  /* app-theme:light:end */
+}
+
+.dark {
+/* app-theme:dark:start */
+  --app-background: #1c1c1e;
+  --app-surface-primary: #2c2c2e;
+  --app-surface-secondary: #1c1c1e;
+  --app-surface-tertiary: #3a3a3c;
+  --app-fill-secondary: #2c2c2e;
+  --app-overlay: rgba(0, 0, 0, 0.55);
+  --app-elevation-shadow: rgba(0, 0, 0, 0.64);
+  --app-label-primary: #ffffff;
+  --app-label-secondary: #8e8e93;
+  --app-label-tertiary: #636366;
+  --app-separator: #48484a;
+  --app-control-border: #8e8e93;
+  --app-accent-label: #0091ff;
+  --app-accent-fill: #0091ff;
+  --app-on-accent: #ffffff;
+  --app-accent-fill-hover: #0091ff;
+  --app-accent-fill-pressed: #0091ff;
+  --app-disabled-fill: #2c2c2e;
+  --app-disabled-label: #8e8e93;
+  --app-danger-label: #ff4245;
+  --app-danger-fill: #ff4245;
+  --app-danger-fill-hover: #ff4245;
+  --app-danger-fill-pressed: #ff4245;
+  --app-danger-tonal: #1c1c1e;
+  --app-on-danger: #ffffff;
+  --app-warning-label: #ff9230;
+  --app-warning-fill: #ff9230;
+  --app-warning-fill-hover: #ff9230;
+  --app-warning-fill-pressed: #ff9230;
+  --app-warning-tonal: #1c1c1e;
+  --app-on-warning: #ffffff;
+  --app-success-label: #30d158;
+  --app-success-fill: #30d158;
+  --app-success-fill-hover: #30d158;
+  --app-success-fill-pressed: #30d158;
+  --app-success-tonal: #1c1c1e;
+  --app-on-success: #ffffff;
+  --app-practice-again: var(--app-danger-label);
+  --app-practice-again-tonal: #1c1c1e;
+  --app-practice-again-tonal-pressed: #2c2c2e;
+  --app-practice-hard: var(--app-warning-label);
+  --app-practice-hard-tonal: #1c1c1e;
+  --app-practice-hard-tonal-pressed: #2c2c2e;
+  --app-practice-good: var(--app-accent-label);
+  --app-practice-good-tonal: #1c1c1e;
+  --app-practice-good-tonal-pressed: #2c2c2e;
+  --app-practice-easy: var(--app-success-label);
+  --app-practice-easy-tonal: #1c1c1e;
+  --app-practice-easy-tonal-pressed: #2c2c2e;
+  --app-due-overdue: var(--app-danger-label);
+  --app-due-today: var(--app-warning-label);
+  --app-due-tomorrow: var(--app-accent-label);
+  --app-familiar-base: #db34f2;
+  --app-familiar-label: var(--app-familiar-base);
+  --app-selected-fill: #1c1c1e;
+  --app-selected-border: var(--app-accent-label);
+  --app-focus: var(--app-accent-label);
+  --app-code-surface: #000000;
+  --app-code-label: #ffffff;
+  /* app-theme:dark:end */
+}
+
+@media (prefers-contrast: more) {
+  :root, .openflash-konsta-root {
+/* app-theme:lightContrast:start */
+    --app-background: #ebebf0;
+    --app-surface-primary: #ffffff;
+    --app-surface-secondary: #ebebf0;
+    --app-surface-tertiary: #d8d8dc;
+    --app-fill-secondary: #d8d8dc;
+    --app-overlay: rgba(0, 0, 0, 0.55);
+    --app-elevation-shadow: rgba(0, 0, 0, 0.32);
+    --app-label-primary: #000000;
+    --app-label-secondary: #6c6c70;
+    --app-label-tertiary: #8e8e93;
+    --app-separator: #aeaeb2;
+    --app-control-border: #6c6c70;
+    --app-accent-label: #1e6ef4;
+    --app-accent-fill: #1e6ef4;
+    --app-on-accent: #ffffff;
+    --app-accent-fill-hover: #1e6ef4;
+    --app-accent-fill-pressed: #1e6ef4;
+    --app-disabled-fill: #d8d8dc;
+    --app-disabled-label: #6c6c70;
+    --app-danger-label: #e9152d;
+    --app-danger-fill: #e9152d;
+    --app-danger-fill-hover: #e9152d;
+    --app-danger-fill-pressed: #e9152d;
+    --app-danger-tonal: #ebebf0;
+    --app-on-danger: #ffffff;
+    --app-warning-label: #c55300;
+    --app-warning-fill: #c55300;
+    --app-warning-fill-hover: #c55300;
+    --app-warning-fill-pressed: #c55300;
+    --app-warning-tonal: #ebebf0;
+    --app-on-warning: #ffffff;
+    --app-success-label: #008932;
+    --app-success-fill: #008932;
+    --app-success-fill-hover: #008932;
+    --app-success-fill-pressed: #008932;
+    --app-success-tonal: #ebebf0;
+    --app-on-success: #ffffff;
+    --app-practice-again: var(--app-danger-label);
+    --app-practice-again-tonal: #ebebf0;
+    --app-practice-again-tonal-pressed: #d8d8dc;
+    --app-practice-hard: var(--app-warning-label);
+    --app-practice-hard-tonal: #ebebf0;
+    --app-practice-hard-tonal-pressed: #d8d8dc;
+    --app-practice-good: var(--app-accent-label);
+    --app-practice-good-tonal: #ebebf0;
+    --app-practice-good-tonal-pressed: #d8d8dc;
+    --app-practice-easy: var(--app-success-label);
+    --app-practice-easy-tonal: #ebebf0;
+    --app-practice-easy-tonal-pressed: #d8d8dc;
+    --app-due-overdue: var(--app-danger-label);
+    --app-due-today: var(--app-warning-label);
+    --app-due-tomorrow: var(--app-accent-label);
+    --app-familiar-base: #b02fc2;
+    --app-familiar-label: var(--app-familiar-base);
+    --app-selected-fill: #ebebf0;
+    --app-selected-border: var(--app-accent-label);
+    --app-focus: var(--app-accent-label);
+    --app-code-surface: #000000;
+    --app-code-label: #ffffff;
+    /* app-theme:lightContrast:end */
+  }
+
+  .dark {
+/* app-theme:darkContrast:start */
+    --app-background: #242426;
+    --app-surface-primary: #363638;
+    --app-surface-secondary: #242426;
+    --app-surface-tertiary: #444446;
+    --app-fill-secondary: #363638;
+    --app-overlay: rgba(0, 0, 0, 0.7);
+    --app-elevation-shadow: rgba(0, 0, 0, 0.8);
+    --app-label-primary: #ffffff;
+    --app-label-secondary: #aeaeb2;
+    --app-label-tertiary: #7c7c80;
+    --app-separator: #545456;
+    --app-control-border: #aeaeb2;
+    --app-accent-label: #5cb8ff;
+    --app-accent-fill: #5cb8ff;
+    --app-on-accent: #ffffff;
+    --app-accent-fill-hover: #5cb8ff;
+    --app-accent-fill-pressed: #5cb8ff;
+    --app-disabled-fill: #363638;
+    --app-disabled-label: #aeaeb2;
+    --app-danger-label: #ff6165;
+    --app-danger-fill: #ff6165;
+    --app-danger-fill-hover: #ff6165;
+    --app-danger-fill-pressed: #ff6165;
+    --app-danger-tonal: #242426;
+    --app-on-danger: #ffffff;
+    --app-warning-label: #ffa056;
+    --app-warning-fill: #ffa056;
+    --app-warning-fill-hover: #ffa056;
+    --app-warning-fill-pressed: #ffa056;
+    --app-warning-tonal: #242426;
+    --app-on-warning: #ffffff;
+    --app-success-label: #4ad968;
+    --app-success-fill: #4ad968;
+    --app-success-fill-hover: #4ad968;
+    --app-success-fill-pressed: #4ad968;
+    --app-success-tonal: #242426;
+    --app-on-success: #ffffff;
+    --app-practice-again: var(--app-danger-label);
+    --app-practice-again-tonal: #242426;
+    --app-practice-again-tonal-pressed: #363638;
+    --app-practice-hard: var(--app-warning-label);
+    --app-practice-hard-tonal: #242426;
+    --app-practice-hard-tonal-pressed: #363638;
+    --app-practice-good: var(--app-accent-label);
+    --app-practice-good-tonal: #242426;
+    --app-practice-good-tonal-pressed: #363638;
+    --app-practice-easy: var(--app-success-label);
+    --app-practice-easy-tonal: #242426;
+    --app-practice-easy-tonal-pressed: #363638;
+    --app-due-overdue: var(--app-danger-label);
+    --app-due-today: var(--app-warning-label);
+    --app-due-tomorrow: var(--app-accent-label);
+    --app-familiar-base: #ea8dff;
+    --app-familiar-label: var(--app-familiar-base);
+    --app-selected-fill: #242426;
+    --app-selected-border: var(--app-accent-label);
+    --app-focus: var(--app-accent-label);
+    --app-code-surface: #000000;
+    --app-code-label: #ffffff;
+    /* app-theme:darkContrast:end */
+  }
+}

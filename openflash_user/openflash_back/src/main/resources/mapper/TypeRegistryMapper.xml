@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.TypeRegistryMapper">
+
+    <select id="findConfigJson" resultType="String">
+        select config from pw_type_registry
+        where registry_type = #{registryType} and item_key = #{itemKey} and enabled = 1
+    </select>
+
+    <select id="findEnabledItemKeys" resultType="String">
+        select item_key from pw_type_registry
+        where registry_type = #{registryType} and enabled = 1
+        order by sort_order
+    </select>
+
+    <select id="findEnabledPracticeModes" resultType="openflash_core.entity.PracticeModeOption">
+        select item_key as value,
+               item_name as label
+        from pw_type_registry
+        where registry_type = #{registryType} and enabled = 1
+        order by sort_order
+    </select>
+
+    <select id="findCatalog" resultType="openflash_core.entity.PluginCatalogItem">
+        select item_key as pluginId,
+               item_name as name,
+               config    as config
+        from pw_type_registry
+        where registry_type = #{registryType} and enabled = 1
+        order by sort_order
+    </select>
+
+</mapper>

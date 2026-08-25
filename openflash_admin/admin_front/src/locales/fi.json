@@ -1,0 +1,247 @@
+{
+  "app": {
+    "title": "OpenFlash-ylläpito"
+  },
+  "auth": {
+    "title": "Ylläpitäjän kirjautuminen",
+    "description": "Hallitse käyttäjien oikeuksia ja tämän koneen CLI-työkaluja.",
+    "username": "Käyttäjänimi",
+    "password": "Salasana",
+    "login": "Kirjaudu sisään",
+    "loggingIn": "Kirjaudutaan...",
+    "logout": "Kirjaudu ulos"
+  },
+  "nav": {
+    "menu": "Hallinta",
+    "ariaLabel": "Ylläpidon navigointi",
+    "overview": "Yleiskatsaus",
+    "users": "Käyttäjät",
+    "platformAi": "Alustan AI",
+    "cli": "CLI"
+  },
+  "pages": {
+    "overview": {
+      "title": "Järjestelmän yleiskatsaus",
+      "description": "Näytä käyttäjätilien ja CLI-työkalujen nykyinen tila.",
+      "actions": "Yleiset toiminnot"
+    },
+    "users": {
+      "title": "Käyttäjien hallinta",
+      "description": "Hallitse käyttäjärooleja ja alustan tarjoaman AI:n käyttöoikeuksia.",
+      "searchLabel": "Hae käyttäjiä",
+      "searchPlaceholder": "Käyttäjänimi tai kutsumanimi",
+      "loading": "Käyttäjiä ladataan...",
+      "loadError": "Käyttäjiä ei voitu ladata.",
+      "loadErrorDescription": "Tarkista ylläpitopalvelu ja yritä uudelleen.",
+      "retry": "Lataa uudelleen",
+      "emptyTitle": "Käyttäjiä ei löytynyt",
+      "emptyDescription": "Kokeile toista käyttäjänimeä tai kutsumanimeä.",
+      "roleLabel": "Käyttäjärooli",
+      "roleAria": "Aseta käyttäjän {{username}} rooliksi {{role}}",
+      "cliAccess": "Alustan AI-käyttöoikeudet",
+      "cliAccessSummary": "Sallittu {{allowed}} / {{total}}",
+      "manageCliAccess": "Hallitse",
+      "cliDialogTitle": "Käyttäjän {{user}} CLI-oikeudet",
+      "closeCliDialog": "Valmis",
+      "cliAria": "Vaihda käyttäjän {{username}} {{cli}}-käyttöoikeutta",
+      "cliNames": {
+        "codex-cli": "Codex CLI",
+        "codex": "Codex CLI"
+      },
+      "cliRuntime": {
+        "AVAILABLE": "Käytettävissä",
+        "NOT_INSTALLED": "Ei asennettu",
+        "NOT_LOGGED_IN": "Ei kirjautunut",
+        "DISABLED": "Poistettu käytöstä",
+        "ERROR": "Yhteys epäonnistui"
+      },
+      "saving": "Tallennetaan...",
+      "updateError": "Käyttöoikeutta ei voitu päivittää. Edellinen arvo palautettiin. Yritä uudelleen.",
+      "lastAdminError": "Järjestelmässä on oltava vähintään yksi ylläpitäjä.",
+      "activeStatus": "Aktiivinen",
+      "bannedStatus": "Estetty",
+      "banUser": "Estä tili",
+      "unbanUser": "Poista tilin esto",
+      "deleteUser": "Poista tili",
+      "deleteConfirmTitle": "Poistetaanko tili pysyvästi?",
+      "deleteConfirmBody": "{{user}} ja kaikki tiliin liittyvät tiedot poistetaan pysyvästi. Toimintoa ei voi kumota.",
+      "deleteCancel": "Peruuta",
+      "deleteConfirmAction": "Poista pysyvästi",
+      "deleting": "Poistetaan...",
+      "accountActionError": "Tilitoiminto epäonnistui. Edellinen tila palautettiin. Yritä uudelleen.",
+      "userServiceUnavailableError": "Käyttäjäpalvelu ei ole käynnissä. Käynnistä se ennen tilin pysyvää poistamista.",
+      "selfAccountActionDisabled": "Kirjautuneena olevaa tiliä ei voi estää tai poistaa.",
+      "selfAccountMutationError": "Kirjautuneena olevaa tiliä ei voi estää tai poistaa.",
+      "platformProvided": "Alustan tarjoama",
+      "runtimeUnavailable": "AI-ajopalvelu ei ole käytettävissä",
+      "runtimeUnavailableDescription": "Käyttäjät näkyvät edelleen, mutta alustan AI-oikeuksia ei voi muuttaa ennen ajopalvelun käynnistymistä."
+    },
+    "platformAi": {
+      "title": "Alustan AI",
+      "description": "Hallitse jaettuja AI-yhteyksiä, kiinteitä malleja ja käyttäjäoikeuksia.",
+      "apiSectionTitle": "API-määritykset",
+      "apiSectionDescription": "Hallitse alustan API-yhteyksiä, tunnistetietoja ja kiinteitä malleja.",
+      "loading": "Alustan AI:ta ladataan...",
+      "loadError": "Alustan AI:ta ei voitu ladata.",
+      "retry": "Lataa uudelleen",
+      "runtimeUnavailable": "AI-ajopalvelu ei ole käytettävissä",
+      "runtimeUnavailableDescription": "Turvalliset luettelotiedot näkyvät edelleen. Ajotoiminnot ovat poissa käytöstä palvelun käynnistymiseen asti.",
+      "addConnection": "Lisää yhteys",
+      "apiConnection": "Anthropic API",
+      "codexConnection": "Codex CLI",
+      "createConnection": "Luo yhteys",
+      "saveApiConfiguration": "Tallenna AI-määritys",
+      "connectionType": "Yhteystyyppi",
+      "baseUrl": "Perus-URL",
+      "providerName": "Palveluntarjoajan nimi",
+      "requestUrl": "Pyyntöosoite (Anthropic-yhteensopiva)",
+      "modelName": "Mallin nimi",
+      "sortOrder": "Järjestys",
+      "cancel": "Peruuta",
+      "defaultDeny": "Uuden mallin käyttö sallitaan oletuksena vain valituille käyttäjille.",
+      "enabled": "Käytössä",
+      "disabled": "Poistettu käytöstä",
+      "credentialConfigured": "Tunnistetieto määritetty",
+      "credentialMissing": "Tunnistetieto puuttuu",
+      "replaceCredential": "Vaihda tunnistetieto",
+      "apiKey": "API-avain",
+      "saveCredential": "Tallenna tunnistetieto",
+      "addOffering": "Lisää malli",
+      "modelKey": "Malliavain",
+      "discoverModels": "Etsi mallit",
+      "discoveryUnavailable": "Mallien haku ei ole käytettävissä. Syötä malliavain käsin.",
+      "createOffering": "Luo malli",
+      "allUsers": "Kaikki käyttäjät",
+      "selectedUsers": "Valitut käyttäjät",
+      "defaultAccessAria": "Salli {{model}} kaikille käyttäjille",
+      "connectionEnabledAria": "Ota {{name}} käyttöön",
+      "offeringEnabledAria": "Ota {{model}} käyttöön",
+      "deleteConnection": "Poista yhteys",
+      "deleteOffering": "Poista malli",
+      "deleteConfirmTitle": "Poistetaanko pysyvästi?",
+      "deleteConnectionConfirmBody": "Yhteys ja sen mallit poistetaan pysyvästi.",
+      "deleteOfferingConfirmBody": "Mallitarjonta poistetaan pysyvästi.",
+      "deleteConfirmAction": "Poista pysyvästi",
+      "saveError": "Alustan AI-muutos epäonnistui. Yritä uudelleen.",
+      "emptyTitle": "Ei alustan AI-yhteyksiä",
+      "emptyDescription": "Lisää Anthropic API- tai Codex CLI -yhteys.",
+      "emptyApiTitle": "Ei API-yhteyksiä",
+      "emptyApiDescription": "Lisää Anthropic API -yhteys.",
+      "runtimeStatus": "Ajotila: {{status}}",
+      "runtime": {
+        "AVAILABLE": "Käytettävissä",
+        "ERROR": "Ei käytettävissä",
+        "UNAVAILABLE": "Tilapäisesti ei käytettävissä"
+      }
+    },
+    "cli": {
+      "title": "CLI-hallinta",
+      "description": "Hallitse tämän koneen CLI-palveluja, kirjautumistilaa ja käyttöoikeuksia.",
+      "connectedTitle": "Liitetyt CLI-työkalut",
+      "connectedHint": "Muut CLI-työkalut näkyvät tässä luettelossa, kun ne liitetään.",
+      "codex": {
+        "name": "Codex",
+        "description": "OpenAI Codex CLI",
+        "detailTitle": "Codex CLI",
+        "currentDescription": "Tällä hetkellä valittu CLI.",
+        "current": "Hallitaan nyt",
+        "globalDisabled": "Poistettu käytöstä",
+        "loading": "Codex-tilaa ladataan...",
+        "loadError": "Codex-tilaa ei voitu ladata.",
+        "loadErrorDescription": "Tarkista ylläpito- ja ajonaikaiset palvelut ja yritä uudelleen.",
+        "retry": "Lataa uudelleen",
+        "globalSwitch": "Codexin yleinen kytkin",
+        "globalSwitchDescription": "Kun asetus ei ole käytössä, käyttäjät tai taustatehtävät eivät voi kutsua Codexia.",
+        "globalSwitchAria": "Vaihda Codexin yleistä tilaa",
+        "runtimeTitle": "Ajonaikainen tila",
+        "changeTiming": "Muutosten voimaantulo",
+        "globalDelay": "Käyttäjäoikeudet tulevat voimaan heti. Yleinen kytkin voi kestää enintään {{seconds}} sekuntia.",
+        "updateError": "Yleistä kytkintä ei voitu päivittää. Edellinen arvo palautettiin. Yritä uudelleen.",
+        "loginActionError": "Codex-kirjautuminen epäonnistui. Tarkista palvelut ja yritä uudelleen.",
+        "loginTitle": "Codex-kirjautuminen",
+        "loginOnlyHere": "Vain ylläpitäjä voi kirjata CLI:n sisään tällä sivulla.",
+        "startLogin": "Kirjaudu Codex CLI:hin",
+        "waitingTitle": "Viimeistele kirjautuminen",
+        "deviceCode": "Laitekoodi",
+        "openVerification": "Avaa vahvistussivu",
+        "cancelLogin": "Peruuta kirjautuminen",
+        "accountTitle": "Codex-tili",
+        "accountComplete": "Jaettu kirjautuminen valmis",
+        "accountPrivacy": "Tilin tietoja ja tunnuksia ei näytetä tavallisille käyttäjille.",
+        "refreshStatus": "Päivitä tila",
+        "logoutAccount": "Kirjaudu ulos Codexista",
+        "logoutConfirmTitle": "Kirjaudutaanko ulos Codexista?",
+        "logoutConfirmBody": "Tämä kirjaa ulos tämän koneen jaetulta Codex CLI -tililtä. Käyttäjät ja taustatehtävät eivät voi aloittaa uusia Codex-pyyntöjä, ennen kuin ylläpitäjä kirjautuu uudelleen.",
+        "logoutCancel": "Peruuta",
+        "logoutActionError": "Codexista ei voitu kirjautua ulos. Jaettu tili on edelleen käytettävissä. Tarkista palvelut ja yritä uudelleen.",
+        "runtime": {
+          "AVAILABLE": {
+            "label": "Käytettävissä",
+            "description": "Codex CLI on kirjautunut sisään ja valtuutettujen käyttäjien käytettävissä."
+          },
+          "NOT_INSTALLED": {
+            "label": "Ei asennettu",
+            "description": "Codex CLI:tä ei havaittu tällä koneella."
+          },
+          "NOT_LOGGED_IN": {
+            "label": "Ei kirjautunut",
+            "description": "Codex CLI:n kirjautumista ei ole viimeistelty tällä koneella."
+          },
+          "DISABLED": {
+            "label": "Poistettu käytöstä",
+            "description": "Codexin ajonaikainen palvelu on poistettu käytöstä."
+          },
+          "ERROR": {
+            "label": "Yhteys epäonnistui",
+            "description": "Codex CLI:n tilaa ei saada. Tarkista palvelulokit ja yritä uudelleen."
+          }
+        },
+        "login": {
+          "IDLE": {
+            "label": "Ei aloitettu",
+            "message": "Aloita kirjautuminen nähdäksesi laitteen vahvistustiedot."
+          },
+          "STARTING": {
+            "label": "Aloitetaan",
+            "message": "Luodaan Codex-kirjautumisen laitekoodia."
+          },
+          "PENDING": {
+            "label": "Odottaa kirjautumista",
+            "message": "Avaa vahvistussivu ja anna alla oleva laitekoodi."
+          },
+          "SUCCEEDED": {
+            "label": "Kirjautunut",
+            "message": "Codex CLI:n jaettu kirjautuminen on valmis."
+          },
+          "FAILED": {
+            "label": "Kirjautuminen epäonnistui",
+            "message": "Kirjautumisyritys epäonnistui. Aloita uudelleen."
+          },
+          "EXPIRED": {
+            "label": "Kirjautuminen vanhentui",
+            "message": "Laitekoodi vanhentui. Aloita uudelleen."
+          },
+          "CANCELED": {
+            "label": "Peruutettu",
+            "message": "Kirjautumisyritys peruutettiin."
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "loading": "Ladataan...",
+    "saved": "Tallennettu"
+  },
+  "theme": {
+    "dark": "Tumma tila"
+  },
+  "errors": {
+    "requiredCredentials": "Anna ylläpitäjän käyttäjänimi ja salasana.",
+    "invalidCredentials": "Käyttäjänimi tai salasana on väärä.",
+    "loginRateLimited": "Liian monta kirjautumisyritystä. Yritä myöhemmin uudelleen.",
+    "unauthorized": "Istunto on vanhentunut. Kirjaudu uudelleen.",
+    "forbidden": "Tällä tilillä ei ole ylläpitäjän oikeuksia.",
+    "generic": "Pyyntö epäonnistui. Tarkista ylläpitopalvelu ja yritä uudelleen."
+  }
+}

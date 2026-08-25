@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.UserAiConfigMapper">
+
+    <resultMap id="UserAiConfigResultMap" type="openflash_core.entity.UserAiConfig">
+        <id column="id" property="id"/>
+        <result column="user_id"    property="userId"/>
+        <result column="provider"   property="provider"/>
+        <result column="config"     property="configJson"/>
+        <result column="active"     property="active"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="findActiveByUserId" resultMap="UserAiConfigResultMap">
+        SELECT c.id, c.user_id, c.provider, c.config, 1 AS active, c.updated_at
+        FROM pw_user_ai_config c
+        JOIN pw_user_active_ai_selection s
+          ON s.user_id = c.user_id AND s.source = 'USER'
+         AND s.user_provider_key = c.provider
+        WHERE c.user_id = #{userId}
+        LIMIT 1
+    </select>
+
+    <select id="findAllByUserId" resultMap="UserAiConfigResultMap">
+        SELECT c.id, c.user_id, c.provider, c.config,
+               CASE WHEN s.source = 'USER' AND s.user_provider_key = c.provider
+                    THEN 1 ELSE 0 END AS active,
+               c.updated_at
+        FROM pw_user_ai_config c
+        LEFT JOIN pw_user_active_ai_selection s ON s.user_id = c.user_id
+        WHERE c.user_id = #{userId}
+        ORDER BY active DESC, c.provider ASC
+    </select>
+
+    <select id="findByUserIdAndProvider" resultMap="UserAiConfigResultMap">
+        SELECT c.id, c.user_id, c.provider, c.config,
+               CASE WHEN s.source = 'USER' AND s.user_provider_key = c.provider
+                    THEN 1 ELSE 0 END AS active,
+               c.updated_at
+        FROM pw_user_ai_config c
+        LEFT JOIN pw_user_active_ai_selection s ON s.user_id = c.user_id
+        WHERE c.user_id = #{userId} AND c.provider = #{provider}
+        LIMIT 1
+    </select>
+
+    <insert id="upsert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO pw_user_ai_config (user_id, provider, config)
+        VALUES (#{userId}, #{provider}, #{configJson})
+        ON CONFLICT (user_id, provider) DO UPDATE SET
+            config     = EXCLUDED.config,
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <delete id="deleteByUserIdAndProvider">
+        DELETE FROM pw_user_ai_config
+        WHERE user_id = #{userId}
+          AND provider = #{provider}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE FROM pw_user_ai_config WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

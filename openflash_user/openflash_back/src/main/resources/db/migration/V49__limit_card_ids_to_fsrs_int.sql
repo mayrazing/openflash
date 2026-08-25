@@ -1,0 +1,8 @@
+ALTER TABLE pw_card_progress
+    MODIFY COLUMN card_id INT NOT NULL COMMENT '卡片 ID';
+
+ALTER TABLE pw_card_media
+    MODIFY COLUMN card_id INT NOT NULL COMMENT '所属卡片 ID';
+
+ALTER TABLE pw_card
+    MODIFY COLUMN id INT NOT NULL AUTO_INCREMENT COMMENT '主键 ID';

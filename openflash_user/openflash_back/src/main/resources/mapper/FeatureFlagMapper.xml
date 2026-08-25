@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.FeatureFlagMapper">
+
+    <select id="findGlobalEnabled" resultType="java.lang.Boolean">
+        select enabled from pw_feature_flag where feature_key = #{featureKey}
+    </select>
+
+</mapper>

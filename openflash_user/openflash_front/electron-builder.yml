@@ -1,0 +1,48 @@
+appId: com.openflash.app
+productName: OpenFlash
+copyright: Copyright © 2024
+
+main: electron/main.cjs
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - electron/**/*
+
+linux:
+  target:
+    - deb
+    - rpm
+    - AppImage
+  category: Education
+  maintainer: zhiyong
+  synopsis: Vocabulary learning app with spaced repetition
+  description: |
+    OpenFlash is a vocabulary flashcard application that uses the FSRS
+    spaced repetition algorithm to help you learn and retain words efficiently.
+
+deb:
+  depends:
+    - libgtk-3-0
+    - libnotify4
+    - libnss3
+    - libxss1
+    - libxtst6
+    - xdg-utils
+    - libatspi2.0-0
+    - libuuid1
+    - libsecret-1-0
+
+rpm:
+  depends:
+    - gtk3
+    - libnotify
+    - nss
+    - libXScrnSaver
+    - libXtst
+    - xdg-utils
+    - at-spi2-atk
+    - libuuid

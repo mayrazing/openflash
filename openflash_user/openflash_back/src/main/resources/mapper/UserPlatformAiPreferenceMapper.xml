@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.UserPlatformAiPreferenceMapper">
+    <resultMap id="preference" type="openflash_core.entity.UserPlatformAiPreference">
+        <constructor>
+            <arg column="user_id" javaType="java.lang.Long"/>
+            <arg column="offering_id" javaType="java.lang.Long"/>
+            <arg column="model" javaType="java.lang.String"/>
+            <arg column="reasoning_effort" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <select id="find" resultMap="preference">
+        SELECT user_id, offering_id, model, reasoning_effort
+        FROM pw_user_platform_ai_preference
+        WHERE user_id = #{userId} AND offering_id = #{offeringId}
+        LIMIT 1
+    </select>
+    <insert id="upsert">
+        INSERT INTO pw_user_platform_ai_preference
+            (user_id, offering_id, model, reasoning_effort)
+        VALUES (#{userId}, #{offeringId}, #{model}, #{reasoningEffort})
+        ON CONFLICT (user_id, offering_id) DO UPDATE SET model = EXCLUDED.model,
+            reasoning_effort = EXCLUDED.reasoning_effort,
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+</mapper>

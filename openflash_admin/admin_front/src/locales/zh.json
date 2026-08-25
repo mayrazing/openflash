@@ -1,0 +1,247 @@
+{
+  "app": {
+    "title": "OpenFlash 管理后台"
+  },
+  "auth": {
+    "title": "管理员登录",
+    "description": "管理用户权限和机器上的 CLI.",
+    "username": "用户名",
+    "password": "密码",
+    "login": "登录后台",
+    "loggingIn": "正在登录...",
+    "logout": "退出后台"
+  },
+  "nav": {
+    "menu": "管理菜单",
+    "ariaLabel": "后台管理导航",
+    "overview": "概览",
+    "users": "用户",
+    "platformAi": "平台 AI",
+    "cli": "CLI"
+  },
+  "pages": {
+    "overview": {
+      "title": "系统概览",
+      "description": "查看账号和 CLI 当前状态.",
+      "actions": "常用操作"
+    },
+    "users": {
+      "title": "用户管理",
+      "description": "管理账号角色和平台提供的 AI 使用权限.",
+      "searchLabel": "搜索用户",
+      "searchPlaceholder": "用户名或昵称",
+      "loading": "正在加载用户...",
+      "loadError": "用户列表加载失败.",
+      "loadErrorDescription": "请检查后台服务后重试.",
+      "retry": "重新加载",
+      "emptyTitle": "没有找到用户",
+      "emptyDescription": "换一个用户名或昵称搜索.",
+      "roleLabel": "账号角色",
+      "roleAria": "将 {{username}} 的角色设为 {{role}}",
+      "cliAccess": "平台 AI 权限",
+      "cliAccessSummary": "已允许 {{allowed}} / {{total}}",
+      "manageCliAccess": "管理",
+      "cliDialogTitle": "管理 {{user}} 的 CLI 权限",
+      "closeCliDialog": "完成",
+      "cliAria": "切换 {{username}} 的 {{cli}} 权限",
+      "cliNames": {
+        "codex-cli": "Codex CLI",
+        "codex": "Codex CLI"
+      },
+      "cliRuntime": {
+        "AVAILABLE": "可用",
+        "NOT_INSTALLED": "未安装",
+        "NOT_LOGGED_IN": "未登录",
+        "DISABLED": "已停用",
+        "ERROR": "连接失败"
+      },
+      "saving": "正在保存...",
+      "updateError": "权限更新失败, 已恢复原值. 请重试.",
+      "lastAdminError": "系统必须保留至少一个管理员.",
+      "activeStatus": "正常",
+      "bannedStatus": "已封禁",
+      "banUser": "封禁账号",
+      "unbanUser": "解除封禁",
+      "deleteUser": "删除账号",
+      "deleteConfirmTitle": "永久删除账号?",
+      "deleteConfirmBody": "将永久删除 {{user}} 及其全部数据. 此操作无法撤销.",
+      "deleteCancel": "取消",
+      "deleteConfirmAction": "永久删除",
+      "deleting": "正在删除...",
+      "accountActionError": "账号操作失败. 原状态已恢复, 请重试.",
+      "userServiceUnavailableError": "用户服务未启动, 无法永久删除账号.",
+      "selfAccountActionDisabled": "不能封禁或删除当前登录账号.",
+      "selfAccountMutationError": "不能封禁或删除当前登录账号.",
+      "platformProvided": "平台提供",
+      "runtimeUnavailable": "AI 运行服务未启动",
+      "runtimeUnavailableDescription": "用户仍可查看, 但运行服务启动前不能修改平台 AI 权限."
+    },
+    "platformAi": {
+      "title": "平台 AI",
+      "description": "管理共享 AI 连接, 固定模型和用户权限.",
+      "apiSectionTitle": "API 配置",
+      "apiSectionDescription": "管理平台共享的 API 连接, 凭证和固定模型.",
+      "loading": "正在加载平台 AI...",
+      "loadError": "平台 AI 加载失败.",
+      "retry": "重新加载",
+      "runtimeUnavailable": "AI 运行服务未启动",
+      "runtimeUnavailableDescription": "安全的 catalog metadata 仍可查看. 服务启动前, 运行操作已禁用.",
+      "addConnection": "添加连接",
+      "apiConnection": "Anthropic API",
+      "codexConnection": "Codex CLI",
+      "createConnection": "创建连接",
+      "saveApiConfiguration": "保存 AI 配置",
+      "connectionType": "连接类型",
+      "baseUrl": "Base URL",
+      "providerName": "供应商名称",
+      "requestUrl": "请求地址(必须支持 Anthropic 协议)",
+      "modelName": "模型名",
+      "sortOrder": "排序",
+      "cancel": "取消",
+      "defaultDeny": "新模型默认只对选中用户开放.",
+      "enabled": "已启用",
+      "disabled": "已停用",
+      "credentialConfigured": "凭证已配置",
+      "credentialMissing": "未配置凭证",
+      "replaceCredential": "替换凭证",
+      "apiKey": "API key",
+      "saveCredential": "保存凭证",
+      "addOffering": "添加模型",
+      "modelKey": "模型 key",
+      "discoverModels": "发现模型",
+      "discoveryUnavailable": "模型发现不可用. 请手动输入模型 key.",
+      "createOffering": "创建模型",
+      "allUsers": "全部用户",
+      "selectedUsers": "选中用户",
+      "defaultAccessAria": "允许全部用户使用 {{model}}",
+      "connectionEnabledAria": "启用 {{name}}",
+      "offeringEnabledAria": "启用 {{model}}",
+      "deleteConnection": "删除连接",
+      "deleteOffering": "删除模型",
+      "deleteConfirmTitle": "永久删除?",
+      "deleteConnectionConfirmBody": "这会永久删除该连接及其模型.",
+      "deleteOfferingConfirmBody": "这会永久删除该模型 offering.",
+      "deleteConfirmAction": "永久删除",
+      "saveError": "平台 AI 修改失败. 请重试.",
+      "emptyTitle": "暂无平台 AI 连接",
+      "emptyDescription": "添加 Anthropic API 或 Codex CLI 连接.",
+      "emptyApiTitle": "暂无 API 连接",
+      "emptyApiDescription": "添加 Anthropic API 连接.",
+      "runtimeStatus": "运行状态: {{status}}",
+      "runtime": {
+        "AVAILABLE": "可用",
+        "ERROR": "不可用",
+        "UNAVAILABLE": "暂不可用"
+      }
+    },
+    "cli": {
+      "title": "CLI 管理",
+      "description": "管理机器上的 CLI 服务, 登录状态和用户开关.",
+      "connectedTitle": "已接入 CLI",
+      "connectedHint": "以后接入其他 CLI 后, 会继续显示在这个列表中.",
+      "codex": {
+        "name": "Codex",
+        "description": "OpenAI Codex CLI",
+        "detailTitle": "Codex CLI",
+        "currentDescription": "当前选中的 CLI.",
+        "current": "当前管理",
+        "globalDisabled": "已关闭",
+        "loading": "正在读取 Codex 状态...",
+        "loadError": "Codex 状态加载失败.",
+        "loadErrorDescription": "请检查管理后台与运行服务后重试.",
+        "retry": "重新加载",
+        "globalSwitch": "Codex 全局开关",
+        "globalSwitchDescription": "关闭后, 所有用户和后台任务都不能调用 Codex.",
+        "globalSwitchAria": "切换 Codex 全局开关",
+        "runtimeTitle": "运行状态",
+        "changeTiming": "配置生效",
+        "globalDelay": "用户授权立即生效, 全局开关最多 {{seconds}} 秒生效.",
+        "updateError": "全局开关更新失败, 已恢复原值. 请重试.",
+        "loginActionError": "Codex 登录操作失败. 请检查服务后重试.",
+        "loginTitle": "Codex 登录",
+        "loginOnlyHere": "CLI 登录只允许管理员在这里操作.",
+        "startLogin": "登录 Codex CLI",
+        "waitingTitle": "等待完成登录",
+        "deviceCode": "设备码",
+        "openVerification": "打开验证页面",
+        "cancelLogin": "取消登录",
+        "accountTitle": "Codex 账号",
+        "accountComplete": "已完成共享登录",
+        "accountPrivacy": "账号详情和 token 不向普通用户公开.",
+        "refreshStatus": "刷新状态",
+        "logoutAccount": "退出 Codex",
+        "logoutConfirmTitle": "退出 Codex?",
+        "logoutConfirmBody": "这会退出本机共享的 Codex CLI 账号. 管理员重新登录前, 用户和后台任务无法发起新的 Codex 请求.",
+        "logoutCancel": "取消",
+        "logoutActionError": "Codex 退出失败, 共享账号仍可用. 请检查服务后重试.",
+        "runtime": {
+          "AVAILABLE": {
+            "label": "可用",
+            "description": "Codex CLI 已登录, 获得授权的用户可以使用."
+          },
+          "NOT_INSTALLED": {
+            "label": "未安装",
+            "description": "当前机器未检测到 Codex CLI."
+          },
+          "NOT_LOGGED_IN": {
+            "label": "未登录",
+            "description": "机器上的 Codex CLI 尚未完成登录."
+          },
+          "DISABLED": {
+            "label": "已停用",
+            "description": "Codex 运行服务当前已停用."
+          },
+          "ERROR": {
+            "label": "连接失败",
+            "description": "无法读取 Codex CLI 状态, 请检查服务日志后重试."
+          }
+        },
+        "login": {
+          "IDLE": {
+            "label": "未开始",
+            "message": "启动登录后, 此处会显示设备验证信息."
+          },
+          "STARTING": {
+            "label": "正在启动",
+            "message": "正在生成 Codex 登录设备码."
+          },
+          "PENDING": {
+            "label": "等待登录",
+            "message": "打开验证页面, 输入下面的设备码."
+          },
+          "SUCCEEDED": {
+            "label": "登录成功",
+            "message": "Codex CLI 共享登录已完成."
+          },
+          "FAILED": {
+            "label": "登录失败",
+            "message": "本次登录失败. 请重新开始."
+          },
+          "EXPIRED": {
+            "label": "登录已过期",
+            "message": "设备码已过期. 请重新开始."
+          },
+          "CANCELED": {
+            "label": "已取消",
+            "message": "本次登录已取消."
+          }
+        }
+      }
+    }
+  },
+  "common": {
+    "loading": "正在加载...",
+    "saved": "已保存"
+  },
+  "theme": {
+    "dark": "深色模式"
+  },
+  "errors": {
+    "requiredCredentials": "请输入管理员用户名和密码.",
+    "invalidCredentials": "用户名或密码错误.",
+    "loginRateLimited": "登录尝试过多, 请稍后重试.",
+    "unauthorized": "登录已失效, 请重新登录.",
+    "forbidden": "当前账号没有管理员权限.",
+    "generic": "请求失败, 请检查后台服务后重试."
+  }
+}

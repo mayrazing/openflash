@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_admin.mapper.AdminUserMapper">
+
+    <resultMap id="AdminUserResultMap" type="openflash_admin.entity.AdminUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password_hash" property="passwordHash"/>
+        <result column="nickname" property="nickname"/>
+        <result column="role" property="role"/>
+        <result column="admin_approved" property="adminApproved"/>
+        <result column="banned" property="banned"/>
+        <result column="auth_version" property="authVersion"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <select id="findByUsername" resultMap="AdminUserResultMap">
+        select id, username, password_hash, nickname, role, admin_approved,
+               banned, auth_version, created_at, updated_at, deleted
+        from pw_user
+        where lower(username) = lower(#{username})
+          and deleted = 0
+        limit 1
+    </select>
+
+    <select id="findById" resultMap="AdminUserResultMap">
+        select id, username, password_hash, nickname, role, admin_approved,
+               banned, auth_version, created_at, updated_at, deleted
+        from pw_user
+        where id = #{id}
+          and deleted = 0
+        limit 1
+    </select>
+
+    <select id="lockById" resultMap="AdminUserResultMap">
+        SELECT id, username, password_hash, nickname, role, banned, admin_approved,
+               auth_version, created_at, updated_at, deleted
+        FROM pw_user
+        WHERE id = #{id} AND deleted = 0
+        FOR UPDATE
+    </select>
+
+    <select id="search" resultMap="AdminUserResultMap">
+        SELECT u.id, u.username, u.nickname, u.role, u.banned, u.admin_approved
+        FROM pw_user u
+        WHERE u.deleted=0
+          AND (#{query}='' OR u.username ILIKE CONCAT('%', #{query}, '%')
+               OR u.nickname ILIKE CONCAT('%', #{query}, '%'))
+        ORDER BY u.id
+        LIMIT #{limit}
+    </select>
+
+    <select id="lockActiveAdminIds" resultType="java.lang.Long">
+        SELECT id
+        FROM pw_user
+        WHERE role='ADMIN' AND admin_approved=1 AND deleted=0 AND banned=0
+        ORDER BY id
+        FOR UPDATE
+    </select>
+
+    <update id="updateRole">
+        UPDATE pw_user
+        SET role = #{role},
+            admin_approved = CASE WHEN #{role} = 'ADMIN' THEN 1 ELSE 0 END,
+            admin_approved_at = CASE WHEN #{role} = 'ADMIN' THEN CURRENT_TIMESTAMP ELSE NULL END,
+            admin_approval_source = CASE WHEN #{role} = 'ADMIN' THEN 'ADMIN_UI' ELSE NULL END
+        WHERE id = #{userId} AND deleted=0
+    </update>
+
+</mapper>

@@ -1,0 +1,199 @@
+@import "tailwindcss";
+@import "konsta/react/theme.css";
+
+@theme inline {
+  --color-app-background: var(--app-background);
+  --color-app-surface-primary: var(--app-surface-primary);
+  --color-app-surface-secondary: var(--app-surface-secondary);
+  --color-app-surface-tertiary: var(--app-surface-tertiary);
+  --color-app-label-primary: var(--app-label-primary);
+  --color-app-label-secondary: var(--app-label-secondary);
+  --color-app-label-tertiary: var(--app-label-tertiary);
+  --color-app-separator: var(--app-separator);
+  --color-app-accent: var(--app-accent-label);
+  --color-app-accent-fill: var(--app-accent-fill);
+  --color-app-on-accent: var(--app-on-accent);
+  --color-app-disabled-fill: var(--app-disabled-fill);
+  --color-app-disabled-label: var(--app-disabled-label);
+  --color-app-danger: var(--app-danger-label);
+  --color-app-danger-fill: var(--app-danger-fill);
+  --color-app-danger-tonal: var(--app-danger-tonal);
+  --color-app-warning: var(--app-warning-label);
+  --color-app-warning-tonal: var(--app-warning-tonal);
+  --color-app-success: var(--app-success-label);
+  --color-app-success-tonal: var(--app-success-tonal);
+  --color-app-focus: var(--app-focus);
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --app-background: #f2f2f7;
+  --app-surface-primary: #ffffff;
+  --app-surface-secondary: #f2f2f7;
+  --app-surface-tertiary: #e5e5ea;
+  --app-label-primary: #000000;
+  --app-label-secondary: #8e8e93;
+  --app-label-tertiary: #aeaeb2;
+  --app-separator: #c7c7cc;
+  --app-accent-label: #0088ff;
+  --app-accent-fill: #0088ff;
+  --app-on-accent: #ffffff;
+  --app-disabled-fill: #e5e5ea;
+  --app-disabled-label: #8e8e93;
+  --app-danger-label: #ff383c;
+  --app-danger-fill: #ff383c;
+  --app-danger-tonal: #f2f2f7;
+  --app-warning-label: #ff8d28;
+  --app-warning-tonal: #f2f2f7;
+  --app-success-label: #34c759;
+  --app-success-tonal: #f2f2f7;
+  --app-focus: var(--app-accent-label);
+  --k-color-primary: var(--app-accent-label);
+  --k-color-ios-primary: var(--app-accent-label);
+  --app-page-x: clamp(0.75rem, 3.5vw, 1rem);
+  --app-page-y: clamp(1rem, 3dvh, 1.5rem);
+}
+
+html.dark {
+  color-scheme: dark;
+  --app-background: #1c1c1e;
+  --app-surface-primary: #2c2c2e;
+  --app-surface-secondary: #1c1c1e;
+  --app-surface-tertiary: #3a3a3c;
+  --app-label-primary: #ffffff;
+  --app-label-secondary: #8e8e93;
+  --app-label-tertiary: #636366;
+  --app-separator: #48484a;
+  --app-accent-label: #0091ff;
+  --app-accent-fill: #0091ff;
+  --app-on-accent: #ffffff;
+  --app-disabled-fill: #2c2c2e;
+  --app-disabled-label: #8e8e93;
+  --app-danger-label: #ff4245;
+  --app-danger-fill: #ff4245;
+  --app-danger-tonal: #1c1c1e;
+  --app-warning-label: #ff9d3d;
+  --app-warning-tonal: #1c1c1e;
+  --app-success-label: #30d158;
+  --app-success-tonal: #1c1c1e;
+  --color-gray-700: var(--app-separator);
+  --color-gray-800: var(--app-surface-primary);
+  --color-gray-900: var(--app-background);
+  --k-hairline-color: var(--app-separator);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--app-background);
+  color: var(--app-label-primary);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.admin-page {
+  min-height: 100dvh;
+  background: var(--app-background);
+}
+
+.admin-content-frame,
+.admin-login-frame {
+  margin-inline: auto;
+  padding: var(--app-page-y) var(--app-page-x);
+}
+
+.admin-content-frame {
+  max-width: 72rem;
+  padding-top: 0;
+}
+
+.admin-login-frame {
+  max-width: 32rem;
+  padding-top: 0;
+}
+
+.admin-shell-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.admin-main-content {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.admin-responsive-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.admin-responsive-grid--codex {
+  margin-bottom: 1.25rem;
+}
+
+.platform-ai-content-column {
+  width: calc(100% - 2rem);
+  margin-inline-start: 0.25rem;
+}
+
+.admin-responsive-grid--user-controls {
+  align-items: end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@container (min-width: 44rem) {
+  .admin-responsive-grid--overview {
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+  }
+
+  .admin-responsive-grid--codex {
+    grid-template-columns: minmax(0, 1.2fr) minmax(340px, 0.8fr);
+  }
+
+  .admin-responsive-grid--user-controls {
+    grid-template-columns: minmax(220px, 0.8fr) minmax(320px, 1.2fr);
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .admin-shell-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-shell-grid > aside {
+    position: static;
+  }
+}
+
+.app-primary-fill {
+  background: var(--app-accent-fill) !important;
+  color: var(--app-on-accent) !important;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--app-focus);
+  outline-offset: 2px;
+}
+
+.k-list-input :is(input, textarea, select):focus-visible {
+  outline: none;
+}

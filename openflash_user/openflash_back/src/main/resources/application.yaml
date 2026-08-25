@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: openflash_back
+  datasource:
+    url: ${OPENFLASH_DB_URL:jdbc:postgresql://localhost:5432/openflash_db?currentSchema=openflash}
+    username: ${OPENFLASH_DB_USERNAME:postgres}
+    password: ${OPENFLASH_DB_PASSWORD:root}
+    driver-class-name: org.postgresql.Driver
+  session:
+    timeout: 7d
+    jdbc:
+      initialize-schema: never
+  flyway:
+    enabled: true
+    default-schema: openflash
+    schemas:
+      - openflash
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  task:
+    scheduling:
+      pool:
+        size: 4
+      shutdown:
+        await-termination: true
+        await-termination-period: 30s
+ 
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+  type-aliases-package: openflash_core.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 7d
+      cookie:
+        max-age: 7d
+
+app:
+  admin-internal:
+    token: ${OPENFLASH_ADMIN_INTERNAL_TOKEN:}
+  ai:
+    encryptor-password: ${AI_ENCRYPTOR_PASSWORD:}
+    encryptor-salt: ${AI_ENCRYPTOR_SALT:}
+  ai-runtime:
+    base-url: ${OPENFLASH_AI_RUNTIME_BASE_URL:http://127.0.0.1:8082}
+    core-token: ${OPENFLASH_AI_RUNTIME_CORE_TOKEN:}
+    connect-timeout-millis: 5000
+    read-timeout-millis: 5000
+    generation-timeout-millis: 180000
+    timeout-millis: 180000
+  async-task:
+    fixed-delay-millis: 1000
+    process-batch-size: 20
+    lease-millis: 120000
+    retry-delay-millis: 30000
+    max-retry-count: 3
+    cache-cleanup-fixed-delay-millis: 86400000
+    cache-ttl-days: 100
+    cache-touch-min-interval-hours: 6
+    completed-cleanup-fixed-delay-millis: 600000
+    completed-retention-millis: 3600000
+    completed-cleanup-batch-size: 5000
+  cors:
+    allowed-origin-patterns:
+      - http://localhost:*
+      - http://127.0.0.1:*
+      - http://openflash.local:*
+      - http://zzypc:*
+      - http://192.168.*:*
+      - http://10.*:*
+      - http://172.*:*
+      # 浏览器插件 origin。安装插件后，用环境变量填入 chrome-extension://真实插件ID。
+      - ${OPENFLASH_BROWSER_EXTENSION_ORIGIN:chrome-extension://ilklmnlpfelobakofeimdncobmeknnmk}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_core.mapper.PlatformAiOfferingMapper">
+    <resultMap id="offering" type="openflash_core.entity.PlatformAiOffering">
+        <constructor>
+            <idArg column="id" javaType="_long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="model_key" javaType="java.lang.String"/>
+            <arg column="enabled" javaType="_boolean"/>
+            <arg column="default_access" javaType="_boolean"/>
+            <arg column="sort_order" javaType="_int"/>
+            <arg column="kind" javaType="java.lang.String"/>
+            <arg column="protocol" javaType="java.lang.String"/>
+            <arg column="connection_enabled" javaType="_boolean"/>
+            <arg column="access_granted" javaType="_boolean"/>
+        </constructor>
+    </resultMap>
+    <sql id="selectForUser">
+        SELECT o.id, o.offering_key, o.model_key, o.enabled, o.default_access, o.sort_order,
+               c.kind, c.protocol, c.enabled AS connection_enabled,
+               COALESCE(a.enabled, o.default_access) AS access_granted
+        FROM pw_platform_ai_offering o
+        JOIN pw_platform_ai_connection c ON c.id = o.connection_id
+        LEFT JOIN pw_platform_ai_user_access a
+          ON a.offering_id = o.id AND a.user_id = #{userId}
+    </sql>
+    <select id="findVisibleByUserId" resultMap="offering">
+        <include refid="selectForUser"/>
+        WHERE c.enabled = 1 AND o.enabled = 1
+          AND COALESCE(a.enabled, o.default_access) = 1
+        ORDER BY c.sort_order, o.sort_order, o.id
+    </select>
+    <select id="findByKeyAndUserId" resultMap="offering">
+        <include refid="selectForUser"/>
+        WHERE o.offering_key = #{offeringKey}
+        LIMIT 1
+    </select>
+    <select id="findByIdAndUserId" resultMap="offering">
+        <include refid="selectForUser"/>
+        WHERE o.id = #{offeringId}
+        LIMIT 1
+    </select>
+</mapper>

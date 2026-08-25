@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="openflash_admin.mapper.AdminPlatformAiMapper">
+
+    <resultMap id="CatalogRow" type="openflash_admin.mapper.AdminPlatformAiMapper$CatalogRow">
+        <constructor>
+            <idArg column="connection_id" javaType="_long"/>
+            <arg column="connection_key" javaType="java.lang.String"/>
+            <arg column="kind" javaType="java.lang.String"/>
+            <arg column="protocol" javaType="java.lang.String"/>
+            <arg column="cli_key" javaType="java.lang.String"/>
+            <arg column="display_name" javaType="java.lang.String"/>
+            <arg column="base_url" javaType="java.lang.String"/>
+            <arg column="credentials_configured" javaType="_boolean"/>
+            <arg column="connection_enabled" javaType="_boolean"/>
+            <arg column="connection_sort_order" javaType="_int"/>
+            <arg column="offering_id" javaType="java.lang.Long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="model_key" javaType="java.lang.String"/>
+            <arg column="offering_enabled" javaType="java.lang.Boolean"/>
+            <arg column="default_access" javaType="java.lang.Boolean"/>
+            <arg column="offering_sort_order" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="EnabledOfferingRow"
+               type="openflash_admin.mapper.AdminPlatformAiMapper$EnabledOfferingRow">
+        <constructor>
+            <idArg column="offering_id" javaType="_long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="model_key" javaType="java.lang.String"/>
+            <arg column="default_access" javaType="_boolean"/>
+            <arg column="offering_sort_order" javaType="_int"/>
+            <arg column="connection_key" javaType="java.lang.String"/>
+            <arg column="kind" javaType="java.lang.String"/>
+            <arg column="protocol" javaType="java.lang.String"/>
+            <arg column="cli_key" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <resultMap id="UserAccessOverrideRow"
+               type="openflash_admin.mapper.AdminPlatformAiMapper$UserAccessOverrideRow">
+        <constructor>
+            <idArg column="user_id" javaType="_long"/>
+            <arg column="offering_key" javaType="java.lang.String"/>
+            <arg column="enabled" javaType="_boolean"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="CatalogColumns">
+        c.id AS connection_id,
+        c.connection_key,
+        c.kind,
+        c.protocol,
+        c.cli_key,
+        c.config -&gt;&gt; 'displayName' AS display_name,
+        c.config -&gt;&gt; 'baseUrl' AS base_url,
+        c.credentials_configured,
+        c.enabled AS connection_enabled,
+        c.sort_order AS connection_sort_order,
+        o.id AS offering_id,
+        o.offering_key,
+        o.model_key,
+        o.enabled AS offering_enabled,
+        o.default_access,
+        o.sort_order AS offering_sort_order
+    </sql>
+
+    <sql id="EnabledOfferingColumns">
+        o.id AS offering_id,
+        o.offering_key,
+        o.model_key,
+        o.default_access,
+        o.sort_order AS offering_sort_order,
+        c.connection_key,
+        c.kind,
+        c.protocol,
+        c.cli_key
+    </sql>
+
+    <select id="findCatalogRows" resultMap="CatalogRow">
+        SELECT <include refid="CatalogColumns"/>
+        FROM pw_platform_ai_connection c
+        LEFT JOIN pw_platform_ai_offering o ON o.connection_id = c.id
+        ORDER BY c.sort_order, c.id, o.sort_order, o.id
+    </select>
+
+    <select id="findEnabledOfferings" resultMap="EnabledOfferingRow">
+        SELECT <include refid="EnabledOfferingColumns"/>
+        FROM pw_platform_ai_offering o
+        JOIN pw_platform_ai_connection c ON c.id = o.connection_id
+        WHERE c.enabled = 1 AND o.enabled = 1
+        ORDER BY c.sort_order, o.sort_order, o.id
+    </select>
+
+    <select id="findUserAccessOverrides" resultMap="UserAccessOverrideRow">
+        SELECT a.user_id, o.offering_key, a.enabled
+        FROM pw_platform_ai_user_access a
+        JOIN pw_platform_ai_offering o ON o.id = a.offering_id
+        JOIN pw_platform_ai_connection c ON c.id = o.connection_id
+        WHERE c.enabled = 1 AND o.enabled = 1
+          AND a.user_id IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        ORDER BY a.user_id, c.sort_order, o.sort_order, o.id
+    </select>
+
+    <select id="findEnabledOfferingByKey" resultMap="EnabledOfferingRow">
+        SELECT <include refid="EnabledOfferingColumns"/>
+        FROM pw_platform_ai_offering o
+        JOIN pw_platform_ai_connection c ON c.id = o.connection_id
+        WHERE o.offering_key = #{offeringKey}
+          AND c.enabled = 1
+          AND o.enabled = 1
+        LIMIT 1
+    </select>
+
+    <select id="findCliOffering" resultMap="CatalogRow">
+        SELECT <include refid="CatalogColumns"/>
+        FROM pw_platform_ai_connection c
+        JOIN pw_platform_ai_offering o ON o.connection_id = c.id
+        WHERE c.cli_key = #{cliKey}
+          AND o.model_key IS NULL
+        LIMIT 1
+    </select>
+
+</mapper>
