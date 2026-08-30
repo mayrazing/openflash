@@ -102,7 +102,7 @@ echo "Starting OpenFlash admin backend on port 8081..."
     -u AI_ENCRYPTOR_SALT \
     OPENFLASH_ADMIN_PORT=8081 \
     OPENFLASH_AI_RUNTIME_BASE_URL=http://127.0.0.1:8082 \
-    ./mvnw spring-boot:run
+    ./gradlew --console=plain bootRun
 ) &
 backend_pid=$!
 

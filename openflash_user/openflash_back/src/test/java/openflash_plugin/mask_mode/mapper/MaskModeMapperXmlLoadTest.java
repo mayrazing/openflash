@@ -31,7 +31,7 @@ class MaskModeMapperXmlLoadTest {
     }
 
     /**
-     * 从测试 classpath 读取 mapper XML，验证资源路径被 Maven 正确加载。
+     * 从测试 classpath 读取 mapper XML，验证资源路径被 Gradle 正确加载。
      */
     private String readResource(String path) throws Exception {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(path)) {

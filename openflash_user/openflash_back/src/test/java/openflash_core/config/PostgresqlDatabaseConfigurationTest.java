@@ -17,10 +17,9 @@ class PostgresqlDatabaseConfigurationTest {
     @Test
     void everyBackendUsesOnlyThePostgresqlDriver() throws IOException {
         for (Path module : new Path[] { CORE, ADMIN, RUNTIME }) {
-            String pom = Files.readString(module.resolve("pom.xml"));
-            assertTrue(pom.contains("<groupId>org.postgresql</groupId>"), module.toString());
-            assertTrue(pom.contains("<artifactId>postgresql</artifactId>"), module.toString());
-            assertFalse(pom.contains("mysql-connector-j"), module.toString());
+            String build = Files.readString(module.resolve("build.gradle.kts"));
+            assertTrue(build.contains("org.postgresql:postgresql"), module.toString());
+            assertFalse(build.contains("mysql-connector-j"), module.toString());
         }
     }
 
@@ -41,9 +40,9 @@ class PostgresqlDatabaseConfigurationTest {
 
     @Test
     void coreOwnsPostgresqlFlywayAndOtherBackendsKeepItDisabled() throws IOException {
-        String corePom = Files.readString(CORE.resolve("pom.xml"));
-        assertTrue(corePom.contains("flyway-database-postgresql"));
-        assertFalse(corePom.contains("flyway-mysql"));
+        String coreBuild = Files.readString(CORE.resolve("build.gradle.kts"));
+        assertTrue(coreBuild.contains("flyway-database-postgresql"));
+        assertFalse(coreBuild.contains("flyway-mysql"));
 
         String coreApplication = Files.readString(
                 CORE.resolve("src/main/resources/application.yaml"));

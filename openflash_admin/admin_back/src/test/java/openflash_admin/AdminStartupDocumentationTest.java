@@ -30,7 +30,7 @@ class AdminStartupDocumentationTest {
             )
         );
         assertContains(readme, "cd openflash_user/openflash_back");
-        assertContains(readme, "./mvnw spring-boot:run");
+        assertContains(readme, "./gradlew bootRun");
     }
 
     @Test

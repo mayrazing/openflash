@@ -183,7 +183,7 @@ async function createLauncherFixture(t) {
     '',
   ].join('\n'), { mode: 0o755 })
 
-  await writeFile(join(backendDir, 'mvnw'), [
+  await writeFile(join(backendDir, 'gradlew'), [
     '#!/usr/bin/env bash',
     'printf "backend-wrapper-pid|%s\\n" "$$" >> "$START_DEV_TEST_LOG"',
     'printf "backend-start|%s|%s\\n" "$PWD" "$*" >> "$START_DEV_TEST_LOG"',
@@ -422,7 +422,7 @@ test('starts CosyVoice3, Piper, core, and frontend in dependency order without s
     assert.ok(ready.indexOf('piper-start') < ready.indexOf('backend-start'))
     assert.ok(ready.indexOf('backend-start') < ready.indexOf('frontend-start'))
     assert.match(ready, new RegExp(`piper-start\\|${fixture.piperDir}\\|-m uvicorn app:app --host 127\\.0\\.0\\.1 --port ${fixture.piperPort}`))
-    assert.match(ready, new RegExp(`backend-start\\|${fixture.backendDir}\\|clean spring-boot:run`))
+    assert.match(ready, new RegExp(`backend-start\\|${fixture.backendDir}\\|--console=plain clean bootRun`))
     assert.match(ready, new RegExp(`frontend-start\\|${fixture.frontendDir}\\|run dev -- --host`))
     assert.match(ready, /mdns-start\|--no-reverse openflash\.local 192\.168\.3\.28/)
     assert.doesNotMatch(ready, /runtime-start/)

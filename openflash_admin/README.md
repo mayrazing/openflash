@@ -14,7 +14,7 @@ The services use these non-empty values:
 
 OPENFLASH_AI_RUNTIME_ADMIN_TOKEN and OPENFLASH_AI_RUNTIME_CORE_TOKEN must use different non-empty values. Never print any token or encryption value. Do not pass them to either frontend.
 
-For local development, `openflash_user/start-dev.sh`, `admin_start.sh`, and `openflash_ai_runtime/openflash_ai_runtime.sh` generate all service and personal-AI encryption values on first use. They save them in `${XDG_STATE_HOME:-$HOME/.local/state}/openflash/dev-secrets.env` with file mode `600` and reuse them. Explicit environment variables take priority without replacing saved values. Manual Maven starts still require the relevant values to be exported.
+For local development, `openflash_user/start-dev.sh`, `admin_start.sh`, and `openflash_ai_runtime/openflash_ai_runtime.sh` generate all service and personal-AI encryption values on first use. They save them in `${XDG_STATE_HOME:-$HOME/.local/state}/openflash/dev-secrets.env` with file mode `600` and reuse them. Explicit environment variables take priority without replacing saved values. Manual Gradle starts still require the relevant values to be exported.
 
 The default database is `jdbc:postgresql://localhost:5432/openflash_db?currentSchema=openflash` with username `postgres` and password `root`. `OPENFLASH_DB_URL`, `OPENFLASH_DB_USERNAME`, and `OPENFLASH_DB_PASSWORD` override it. The runtime defaults to `http://127.0.0.1:8082`, and the core defaults to `http://127.0.0.1:8080`. A browser may open the runtime root status page, but application code must never call its internal APIs directly.
 
@@ -33,7 +33,7 @@ cd openflash_user/openflash_back
 export OPENFLASH_ADMIN_INTERNAL_TOKEN=replace-with-admin-core-secret
 export OPENFLASH_AI_RUNTIME_CORE_TOKEN=replace-with-runtime-core-secret
 export AI_ENCRYPTOR_PASSWORD=replace-with-personal-ai-password
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 Once one core startup has completed the migrations, the core may be stopped if permanent user deletion and the user application are not needed.
@@ -53,7 +53,7 @@ The runtime is optional at admin startup. Start the admin backend independently:
 cd openflash_admin/admin_back
 export OPENFLASH_ADMIN_INTERNAL_TOKEN=replace-with-admin-core-secret
 export OPENFLASH_AI_RUNTIME_ADMIN_TOKEN=replace-with-runtime-admin-secret
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 Start the admin frontend:

@@ -27,7 +27,7 @@ For local development, run:
 
 The launcher loads or creates the shared local development secrets, binds the runtime to `127.0.0.1:8082`, and runs it in the foreground. It does not start the user or admin applications.
 
-## Manual Maven start
+## Manual Gradle start
 
 Start PostgreSQL, export the four required values in the process environment, then run from the repository root:
 
@@ -37,7 +37,7 @@ export OPENFLASH_AI_RUNTIME_ADMIN_TOKEN=replace-with-runtime-admin-secret
 export OPENFLASH_AI_RUNTIME_CORE_TOKEN=replace-with-different-runtime-core-secret
 export OPENFLASH_PLATFORM_AI_ENCRYPTOR_PASSWORD=replace-with-standard-base64-32-byte-minimum
 export OPENFLASH_PLATFORM_AI_ENCRYPTOR_SALT=replace-with-standard-base64-16-byte-minimum
-./mvnw spring-boot:run
+./gradlew bootRun
 ```
 
 The default bind can be changed for an isolated deployment with `OPENFLASH_AI_RUNTIME_ADDRESS` and `OPENFLASH_AI_RUNTIME_PORT`. Keep the runtime private and update `OPENFLASH_AI_RUNTIME_BASE_URL` in callers together. The project launchers intentionally use `127.0.0.1:8082`.

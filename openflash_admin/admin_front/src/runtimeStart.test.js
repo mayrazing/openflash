@@ -75,7 +75,7 @@ async function createLauncherFixture(t, requestedPort) {
   ])
   await writeFile(fixtureScript, (await readFile(SCRIPT_PATH, 'utf8')).replaceAll('8082', String(port)), { mode: 0o755 })
   await writeFile(join(scriptsDir, 'dev-secrets.sh'), await readFile(DEV_SECRETS_HELPER_PATH, 'utf8'), { mode: 0o755 })
-  await writeFile(join(runtimeRoot, 'mvnw'), [
+  await writeFile(join(runtimeRoot, 'gradlew'), [
     '#!/usr/bin/env bash',
     'printf "runtime-start|%s|%s\\n" "$PWD" "$*" >> "$RUNTIME_START_TEST_LOG"',
     'for name in OPENFLASH_ADMIN_INTERNAL_TOKEN OPENFLASH_AI_RUNTIME_ADMIN_TOKEN OPENFLASH_AI_RUNTIME_CORE_TOKEN OPENFLASH_PLATFORM_AI_ENCRYPTOR_PASSWORD OPENFLASH_PLATFORM_AI_ENCRYPTOR_SALT AI_ENCRYPTOR_PASSWORD AI_ENCRYPTOR_SALT; do',
@@ -105,7 +105,7 @@ test('starts only the runtime with its scoped environment', async t => {
   const log = await readFile(fixture.logPath, 'utf8')
 
   assert.equal(result.code, 0)
-  assert.match(log, new RegExp(`runtime-start\\|${fixture.runtimeRoot}\\|spring-boot:run`))
+  assert.match(log, new RegExp(`runtime-start\\|${fixture.runtimeRoot}\\|--console=plain bootRun`))
   assert.match(log, new RegExp(`runtime-bind\\|127\\.0\\.0\\.1\\|${fixture.port}`))
   for (const name of [
     'OPENFLASH_AI_RUNTIME_ADMIN_TOKEN',

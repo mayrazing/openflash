@@ -115,7 +115,7 @@ async function createLauncherFixture(t, options = {}) {
     if (error.code !== 'ENOENT') throw error
   }
 
-  await writeFile(join(backendDir, 'mvnw'), [
+  await writeFile(join(backendDir, 'gradlew'), [
     '#!/usr/bin/env bash',
     'printf "backend-wrapper-pid|%s\\n" "$$" >> "$ADMIN_START_TEST_LOG"',
     'printf "backend-start|%s|%s\\n" "$PWD" "$*" >> "$ADMIN_START_TEST_LOG"',
@@ -134,7 +134,7 @@ async function createLauncherFixture(t, options = {}) {
     '',
   ].join('\n'), { mode: 0o755 })
 
-  await writeFile(join(coreDir, 'mvnw'), [
+  await writeFile(join(coreDir, 'gradlew'), [
     '#!/usr/bin/env bash',
     'printf "forbidden-core-start\\n" >> "$ADMIN_START_TEST_LOG"',
     'exit 9',
@@ -312,7 +312,7 @@ test('starts without runtime and accepts expected unauthenticated 401', async t 
   const launcher = startLauncher(fixture)
   try {
     const backendWaiting = await waitForLog(fixture.logPath, content => content.includes('backend-start'))
-    assert.match(backendWaiting, new RegExp(`backend-start\\|${fixture.backendDir}\\|spring-boot:run`))
+    assert.match(backendWaiting, new RegExp(`backend-start\\|${fixture.backendDir}\\|--console=plain bootRun`))
     assert.doesNotMatch(backendWaiting, /runtime-start|\/health/)
     assert.doesNotMatch(backendWaiting, /frontend-start/)
 

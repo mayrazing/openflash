@@ -37,4 +37,4 @@ exec env \
   -u AI_ENCRYPTOR_SALT \
   OPENFLASH_AI_RUNTIME_ADDRESS=127.0.0.1 \
   OPENFLASH_AI_RUNTIME_PORT=8082 \
-  ./mvnw spring-boot:run
+  ./gradlew --console=plain bootRun

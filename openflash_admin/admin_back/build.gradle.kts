@@ -1,0 +1,42 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    java
+    id("org.springframework.boot") version "4.0.5"
+}
+
+group = "openflash"
+version = "0.1.0"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(enforcedPlatform(SpringBootPlugin.BOM_COORDINATES))
+
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1")
+    implementation("org.springframework.boot:spring-boot-starter-session-jdbc")
+    implementation("org.springframework.security:spring-security-crypto")
+
+    runtimeOnly("org.postgresql:postgresql")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation("org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}

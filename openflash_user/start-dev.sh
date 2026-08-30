@@ -54,13 +54,13 @@ resolve_piper_python() {
   return 1
 }
 
-resolve_maven() {
-  if [[ -x "${BACKEND_DIR}/mvnw" ]]; then
-    echo "${BACKEND_DIR}/mvnw"
+resolve_gradle() {
+  if [[ -x "${BACKEND_DIR}/gradlew" ]]; then
+    echo "${BACKEND_DIR}/gradlew"
     return
   fi
-  if command -v mvn >/dev/null 2>&1; then
-    command -v mvn
+  if command -v gradle >/dev/null 2>&1; then
+    command -v gradle
     return
   fi
   return 1
@@ -307,8 +307,8 @@ fi
 echo "Piper TTS ready, starting backend..."
 
 cd "${BACKEND_DIR}"
-if ! maven_cmd="$(resolve_maven)"; then
-  echo "Maven not found. Install Maven or make ${BACKEND_DIR}/mvnw executable."
+if ! gradle_cmd="$(resolve_gradle)"; then
+  echo "Gradle not found. Install Gradle or make ${BACKEND_DIR}/gradlew executable."
   exit 1
 fi
 env \
@@ -316,7 +316,7 @@ env \
   -u OPENFLASH_PLATFORM_AI_ENCRYPTOR_PASSWORD \
   -u OPENFLASH_PLATFORM_AI_ENCRYPTOR_SALT \
   OPENFLASH_AI_RUNTIME_BASE_URL=http://127.0.0.1:8082 \
-  "${maven_cmd}" clean spring-boot:run &
+  "${gradle_cmd}" --console=plain clean bootRun &
 backend_pid=$!
 
 echo "Waiting for backend to be ready..."

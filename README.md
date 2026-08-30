@@ -317,9 +317,9 @@ The build output lands in `openflash_user/openflash_front/dist` — serve it wit
 
 ```bash
 cd openflash_user/openflash_back
-./mvnw clean package -DskipTests
+./gradlew clean bootJar -x test
 export AI_ENCRYPTOR_PASSWORD=your_password
-java -jar target/*.jar
+java -jar build/libs/*.jar
 ```
 
 The backend needs to stay running, so manage it with systemd, pm2, or supervisor so it restarts after a crash.
@@ -650,9 +650,9 @@ VITE_API_BASE_URL=http://your-server:8080 npm run build
 
 ```bash
 cd openflash_user/openflash_back
-./mvnw clean package -DskipTests
+./gradlew clean bootJar -x test
 export AI_ENCRYPTOR_PASSWORD=your_password
-java -jar target/*.jar
+java -jar build/libs/*.jar
 ```
 
 后端进程需要长期常驻，建议用 systemd、pm2 或 supervisor 管理，异常退出能自动拉起。

@@ -36,7 +36,7 @@ class RuntimeStartupDocumentationTest {
                 + "different non-empty values."
         );
         assertContains(readme, "Never print any token or encryption value.");
-        assertOrdered(readme, List.of("cd openflash_ai_runtime", "./mvnw spring-boot:run"));
+        assertOrdered(readme, List.of("cd openflash_ai_runtime", "./gradlew bootRun"));
     }
 
     @Test
