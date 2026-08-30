@@ -21,6 +21,16 @@ before(async () => {
   const address = server.httpServer.address()
   baseUrl = `http://127.0.0.1:${address.port}`
   browser = await chromium.launch({ headless: true })
+
+  // 预热: 首次加载承担 vite 冷编译 (CI 慢机可超 15s), 在 before 里消化掉,
+  // 避免挤爆首个用例的逐步等待上限.
+  const warmup = await browser.newContext()
+  warmup.setDefaultTimeout(60_000)
+  await warmup.addInitScript(installHarness, { providers: [] })
+  const warmPage = await warmup.newPage()
+  await warmPage.goto(baseUrl)
+  await warmPage.getByText('AI Configuration', { exact: true }).waitFor()
+  await warmup.close()
 })
 
 after(async () => {
