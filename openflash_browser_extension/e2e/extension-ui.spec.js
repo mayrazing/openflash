@@ -211,6 +211,10 @@ test.beforeAll(async () => {
       response.end('<!doctype html><html><body><h1>Ordinary test page</h1><p>Extension host page.</p></body></html>')
       return
     }
+    if (url.pathname === '/api/decks' && request.method === 'GET') {
+      respondJson(response, { code: 200, data: [] })
+      return
+    }
     if (url.pathname.startsWith('/failure/api/')) {
       respondJson(response, { code: 50001, message: 'login failed' })
       return
@@ -270,7 +274,10 @@ test('Chinese popup keeps the approved compact layout, semantic themes, and visi
   await expect(page.getByRole('alert')).toContainText('API error 50001')
   await page.content()
 
-  await setStorage(serviceWorker, { serviceUrl: `${mockOrigin}/success` })
+  await setStorage(serviceWorker, {
+    serviceUrl: `${mockOrigin}/success`,
+    lastImportStatus: null,
+  })
   await page.reload()
   await page.waitForLoadState('networkidle')
   await expect(page.locator('#newDeckName')).toBeVisible()
