@@ -14,6 +14,19 @@ let mockServer
 let mockOrigin
 const longNickname = 'reader-with-a-production-length-account-name@example.com'
 
+const labels = {
+  'manualCard.title': 'Quick manual card',
+  'manualCard.sideA': 'Side A',
+  'manualCard.sideB': 'Side B',
+  'manualCard.save': 'Save',
+  'manualCard.saving': 'Saving...',
+  'manualCard.cancel': 'Cancel',
+  'manualCard.unsavedTitle': 'Unsaved content',
+  'manualCard.unsavedConfirm': 'Close',
+  'manualCard.unsavedBack': 'Keep editing',
+  'manualCard.emptyContent': 'Fill in at least one side or paste an image',
+}
+
 function launchExtensionContext(userDataDir) {
   return chromium.launchPersistentContext(userDataDir, {
     channel: 'chromium',
@@ -29,11 +42,7 @@ function watchRuntime(context, runtimeErrors) {
   const watchedPages = new WeakSet()
   const watchedWorkers = new WeakSet()
   const recordConsoleError = (message, source) => {
-    if (message.type() !== 'error') return
-    // Chromium 149+: extension reload 期间旧 context 的资源请求会被拦成
-    // ERR_BLOCKED_BY_CLIENT, 属于重载竞态噪音, 不是运行时错误.
-    if (source.startsWith('chrome-extension://') && message.text() === 'Failed to load resource: net::ERR_BLOCKED_BY_CLIENT') return
-    runtimeErrors.push(`console ${source}: ${message.text()}`)
+    if (message.type() === 'error') runtimeErrors.push(`console ${source}: ${message.text()}`)
   }
   const watchPage = (page) => {
     if (watchedPages.has(page)) return
@@ -202,10 +211,6 @@ test.beforeAll(async () => {
       response.end('<!doctype html><html><body><h1>Ordinary test page</h1><p>Extension host page.</p></body></html>')
       return
     }
-    if (url.pathname === '/api/decks' && request.method === 'GET') {
-      respondJson(response, { code: 200, data: [] })
-      return
-    }
     if (url.pathname.startsWith('/failure/api/')) {
       respondJson(response, { code: 50001, message: 'login failed' })
       return
@@ -265,10 +270,7 @@ test('Chinese popup keeps the approved compact layout, semantic themes, and visi
   await expect(page.getByRole('alert')).toContainText('API error 50001')
   await page.content()
 
-  await setStorage(serviceWorker, {
-    serviceUrl: `${mockOrigin}/success`,
-    lastImportStatus: null,
-  })
+  await setStorage(serviceWorker, { serviceUrl: `${mockOrigin}/success` })
   await page.reload()
   await page.waitForLoadState('networkidle')
   await expect(page.locator('#newDeckName')).toBeVisible()
@@ -452,6 +454,117 @@ test('shortcut page keeps 440px content, both commands and working settings entr
   console.log('[e2e-evidence] shortcut', { mainWidth, light, dark, highContrast, tabUrls })
 })
 
+test('manual card is isolated, clamped, theme-reactive and unmounted on close', async ({ extension }) => {
+  const { context, serviceWorker } = extension
+  await closePages(context)
+  await setStorage(serviceWorker, { manualCardPosition: { left: 9999, top: -9999 } })
+  const page = await context.newPage()
+  await page.setViewportSize({ width: 900, height: 700 })
+  await page.emulateMedia({ colorScheme: 'light', contrast: 'no-preference' })
+  await page.goto(`${mockOrigin}/test-page`)
+  await page.waitForLoadState('networkidle')
+  await expect(page.getByRole('heading', { name: 'Ordinary test page' })).toBeVisible()
+  expect(await shadowHostCount(page, '[data-side="a"]')).toBe(0)
+  await page.evaluate(() => {
+    window.__openflashBodyKeydowns = 0
+    document.body.addEventListener('keydown', () => { window.__openflashBodyKeydowns += 1 })
+  })
+
+  await sendToPage(serviceWorker, page, {
+    type: 'OPENFLASH_OPEN_MANUAL_CARD',
+    deckId: '7',
+    baseUrl: `${mockOrigin}/success`,
+    labels,
+  })
+  const sideA = page.locator('[data-side="a"]')
+  await expect(sideA).toBeVisible()
+  await expect(page.locator('.k-card')).toBeVisible()
+  expect(await page.locator('.k-button').count()).toBeGreaterThanOrEqual(2)
+  expect(await shadowHostCount(page, '[data-side="a"]')).toBe(1)
+  expect(await page.evaluate(() => document.activeElement?.shadowRoot?.activeElement?.dataset?.side)).toBe('a')
+
+  const position = await manualHostPosition(page)
+  expect(position.left).toBeGreaterThanOrEqual(16)
+  expect(position.top).toBeGreaterThanOrEqual(16)
+  expect(position.right).toBeLessThanOrEqual(900)
+  expect(position.bottom).toBeLessThanOrEqual(700)
+  await sendToPage(serviceWorker, page, {
+    type: 'OPENFLASH_OPEN_MANUAL_CARD',
+    deckId: '7',
+    baseUrl: `${mockOrigin}/success`,
+    labels,
+  })
+  expect(await shadowHostCount(page, '[data-side="a"]')).toBe(1)
+
+  await sideA.press('x')
+  expect(await page.evaluate(() => window.__openflashBodyKeydowns)).toBe(0)
+  await page.emulateMedia({ colorScheme: 'dark', contrast: 'no-preference' })
+  await expect.poll(() => page.locator('.openflash-konsta-root').evaluate((node) => node.classList.contains('dark'))).toBe(true)
+  const dark = await themeColors(page, '.k-card', '[data-side="a"]')
+  expect(dark.background).toBe('rgb(44, 44, 46)')
+  expect(dark.background).toBe(dark.surfaceToken)
+  expect(dark.label).toBe(dark.labelToken)
+  const manualLayout = await page.evaluate(() => {
+    const host = Array.from(document.body.children).find((node) => node.shadowRoot?.querySelector('[data-side="a"]'))
+    const root = host.shadowRoot.querySelector('.openflash-konsta-root')
+    const card = host.shadowRoot.querySelector('.k-card')
+    const hostBox = host.getBoundingClientRect()
+    const cardBox = card.getBoundingClientRect()
+    return {
+      cardBox: { bottom: cardBox.bottom, left: cardBox.left, right: cardBox.right, top: cardBox.top, width: cardBox.width },
+      hostBackground: getComputedStyle(host).backgroundColor,
+      hostBox: { bottom: hostBox.bottom, left: hostBox.left, right: hostBox.right, top: hostBox.top, width: hostBox.width },
+      rootBackground: getComputedStyle(root).backgroundColor,
+    }
+  })
+  expect(manualLayout.cardBox.left).toBeCloseTo(manualLayout.hostBox.left, 0)
+  expect(manualLayout.cardBox.top).toBeCloseTo(manualLayout.hostBox.top, 0)
+  expect(manualLayout.cardBox.right).toBeCloseTo(manualLayout.hostBox.right, 0)
+  expect(manualLayout.cardBox.bottom).toBeCloseTo(manualLayout.hostBox.bottom, 0)
+  expect(manualLayout.cardBox.width).toBeCloseTo(manualLayout.hostBox.width, 0)
+  expect(manualLayout.hostBackground).toBe('rgba(0, 0, 0, 0)')
+  expect(manualLayout.rootBackground).toBe('rgba(0, 0, 0, 0)')
+  await page.screenshot({ fullPage: true, path: resolve(screenshotDir, 'manual-card-dark.png') })
+
+  await page.emulateMedia({ colorScheme: 'dark', contrast: 'more' })
+  const highContrast = await themeColors(page, '.k-card', '[data-side="a"]')
+  expect(highContrast.background).toBe('rgb(54, 54, 56)')
+  expect(highContrast.background).toBe(highContrast.surfaceToken)
+  await page.emulateMedia({ colorScheme: 'dark', contrast: 'no-preference' })
+
+  await sideA.press('Escape')
+  await expect(page.getByText('Unsaved content', { exact: true })).toBeVisible()
+  await page.evaluate(() => {
+    const host = Array.from(document.body.children).find((node) => node.shadowRoot?.querySelector('[data-side], [data-role="confirm-close"]'))
+    window.__oldManualHost = host
+    window.__oldManualRoot = host?.shadowRoot?.querySelector('.openflash-konsta-root')
+    window.__oldManualMount = host?.shadowRoot?.querySelector('.openflash-konsta-root')
+  })
+  await page.locator('[data-role="confirm-close"]').click()
+  expect(await shadowHostCount(page, '[data-side="a"], [data-role="confirm-close"]')).toBe(0)
+  expect(await page.evaluate(() => ({
+    connected: window.__oldManualHost?.isConnected,
+    mountedChildren: window.__oldManualMount?.childElementCount,
+    wasDark: window.__oldManualRoot?.classList.contains('dark'),
+  }))).toEqual({ connected: false, mountedChildren: 0, wasDark: true })
+  await page.emulateMedia({ colorScheme: 'light', contrast: 'no-preference' })
+  await page.waitForTimeout(50)
+  expect(await page.evaluate(() => window.__oldManualRoot?.classList.contains('dark'))).toBe(true)
+
+  await page.evaluate(() => window.getSelection()?.removeAllRanges())
+  const createRequestsBefore = countRequests('POST', '/success/api/browser-import/decks/7/cards')
+  await sendToPage(serviceWorker, page, {
+    type: 'OPENFLASH_OPEN_MANUAL_CARD',
+    deckId: '7',
+    baseUrl: `${mockOrigin}/success`,
+    labels,
+  })
+  await page.locator('[data-role="save"]').click()
+  await expect(page.getByRole('alert')).toContainText(labels['manualCard.emptyContent'])
+  expect(countRequests('POST', '/success/api/browser-import/decks/7/cards')).toBe(createRequestsBefore)
+  console.log('[e2e-evidence] manual-card', { position, dark, highContrast, manualLayout })
+})
+
 test('page Toast uses final Apple fill/on-color and resets its timer', async ({ extension }) => {
   const { context, serviceWorker } = extension
   await closePages(context)
@@ -604,6 +717,14 @@ function hasVisibleFocus(focus) {
 async function shadowHostCount(page, innerSelector) {
   return page.evaluate((selector) => Array.from(document.body.children)
     .filter((node) => node.shadowRoot?.querySelector(selector)).length, innerSelector)
+}
+
+async function manualHostPosition(page) {
+  return page.evaluate(() => {
+    const host = Array.from(document.body.children).find((node) => node.shadowRoot?.querySelector('[data-side="a"]'))
+    const bounds = host.getBoundingClientRect()
+    return { left: bounds.left, top: bounds.top, right: bounds.right, bottom: bounds.bottom }
+  })
 }
 
 async function showNotification(serviceWorker, page, message, level) {

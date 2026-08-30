@@ -356,9 +356,6 @@ class CodexLoginCoordinatorTest {
                 (peer, loginId) -> cancellation);
         coordinator.start();
         rpc.completeStart(validStart("terminal-first"));
-        // completeStart 仅写管道, start 响应由 rpc 读线程异步处理; 等 PENDING
-        // 落定后再驱动 logout, 否则 drain 会把"未开始"当成"立即完成".
-        awaitState(coordinator, LoginState.PENDING);
         CodexAppServerClient client = mock(CodexAppServerClient.class);
         CodexRuntimeService service = runtimeService(coordinator, client);
         CompletableFuture<Boolean> logout = service.logoutAccount().toCompletableFuture();
@@ -406,8 +403,6 @@ class CodexLoginCoordinatorTest {
                 (peer, loginId) -> cancellation);
         coordinator.start();
         rpc.completeStart(validStart("failure-first"));
-        // 同上: 等 rpc 读线程把 start 响应处理成 PENDING 再驱动 logout.
-        awaitState(coordinator, LoginState.PENDING);
         CodexAppServerClient client = mock(CodexAppServerClient.class);
         CodexRuntimeService service = runtimeService(coordinator, client);
         CompletableFuture<Boolean> logout = service.logoutAccount().toCompletableFuture();
@@ -453,8 +448,6 @@ class CodexLoginCoordinatorTest {
                 (peer, loginId) -> cancellation);
         coordinator.start();
         rpc.completeStart(validStart("terminal-success"));
-        // 同上: 等 rpc 读线程把 start 响应处理成 PENDING 再驱动 logout.
-        awaitState(coordinator, LoginState.PENDING);
         CodexAppServerClient client = mock(CodexAppServerClient.class);
         when(client.logoutAccount()).thenReturn(CompletableFuture.completedFuture(null));
         CodexRuntimeService service = runtimeService(coordinator, client);

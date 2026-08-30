@@ -21,16 +21,6 @@ before(async () => {
   const address = server.httpServer.address()
   baseUrl = `http://127.0.0.1:${address.port}`
   browser = await chromium.launch({ headless: true })
-
-  // 预热: 首次加载承担 vite 冷编译 (CI 慢机可超 15s), 在 before 里消化掉,
-  // 避免挤爆首个用例的逐步等待上限.
-  const warmup = await browser.newContext()
-  warmup.setDefaultTimeout(60_000)
-  await warmup.addInitScript(installHarness, { providers: [] })
-  const warmPage = await warmup.newPage()
-  await warmPage.goto(baseUrl)
-  await warmPage.getByText('AI Configuration', { exact: true }).waitFor()
-  await warmup.close()
 })
 
 after(async () => {
@@ -359,9 +349,7 @@ function platformCatalog(model, efforts = ['low']) {
 
 async function openScenario(scenario) {
   const context = await browser.newContext()
-  // CI 冷启动 (vite dev server + chromium) 可能挤占首个用例的等待窗口,
-  // 3s 在慢机必超时; 断言目标不变, 只放宽单步等待上限.
-  context.setDefaultTimeout(15000)
+  context.setDefaultTimeout(3000)
   await context.addInitScript(installHarness, scenario)
   const page = await context.newPage()
   await page.goto(baseUrl)
