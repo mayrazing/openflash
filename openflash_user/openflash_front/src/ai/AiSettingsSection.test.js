@@ -349,7 +349,9 @@ function platformCatalog(model, efforts = ['low']) {
 
 async function openScenario(scenario) {
   const context = await browser.newContext()
-  context.setDefaultTimeout(3000)
+  // CI 冷启动 (vite dev server + chromium) 可能挤占首个用例的等待窗口,
+  // 3s 在慢机必超时; 断言目标不变, 只放宽单步等待上限.
+  context.setDefaultTimeout(15000)
   await context.addInitScript(installHarness, scenario)
   const page = await context.newPage()
   await page.goto(baseUrl)
