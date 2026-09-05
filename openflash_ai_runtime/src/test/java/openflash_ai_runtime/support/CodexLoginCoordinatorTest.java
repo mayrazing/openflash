@@ -177,7 +177,7 @@ class CodexLoginCoordinatorTest {
         rpc.completeStart(validStart("early"));
 
         assertEquals(LoginState.PENDING, started.toCompletableFuture().join().state());
-        assertEquals(LoginState.SUCCEEDED, coordinator.snapshot().state());
+        awaitState(coordinator, LoginState.SUCCEEDED);
     }
 
     @Test
@@ -961,7 +961,7 @@ class CodexLoginCoordinatorTest {
         rpc.completeStart(validStart("match"));
 
         assertEquals(LoginState.PENDING, started.toCompletableFuture().join().state());
-        assertEquals(LoginState.SUCCEEDED, coordinator.snapshot().state());
+        awaitState(coordinator, LoginState.SUCCEEDED);
         rpc.emitCompletion("match", false, "duplicate raw error");
         assertEquals(LoginState.SUCCEEDED, coordinator.snapshot().state());
     }
