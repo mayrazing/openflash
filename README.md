@@ -81,7 +81,7 @@ Run all preparation commands from the repository root. During startup, open thre
 
 Install and verify these tools first:
 
-- Java 17+
+- JDK 21
 - Node.js 18+ and npm
 - PostgreSQL 17+, with PostgreSQL already running
 - Conda
@@ -414,7 +414,7 @@ MIT
 
 先安装并确认下面这些工具可用:
 
-- Java 17+
+- JDK 21
 - Node.js 18+ 和 npm
 - PostgreSQL 17+, 并且 PostgreSQL 已启动
 - Conda
